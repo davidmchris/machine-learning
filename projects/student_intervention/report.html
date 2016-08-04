@@ -226,7 +226,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Import libraries</span>
@@ -278,7 +278,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Calculate number of students</span>
@@ -295,7 +295,7 @@ div#notebook {
 <span class="n">n_failed</span> <span class="o">=</span> <span class="n">value_counts</span><span class="p">[</span><span class="s1">&#39;no&#39;</span><span class="p">]</span>
 
 <span class="c1"># TODO: Calculate graduation rate</span>
-<span class="n">grad_rate</span> <span class="o">=</span> <span class="n">n_passed</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">n_students</span><span class="p">)</span>
+<span class="n">grad_rate</span> <span class="o">=</span> <span class="n">n_passed</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">n_students</span><span class="p">)</span><span class="o">*</span><span class="mf">100.0</span>
 
 <span class="c1"># Print the results</span>
 <span class="k">print</span> <span class="s2">&quot;Total number of students: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_students</span><span class="p">)</span>
@@ -319,7 +319,7 @@ div#notebook {
 Number of features: 30
 Number of students who passed: 265
 Number of students who failed: 130
-Graduation rate of the class: 0.67%
+Graduation rate of the class: 67.09%
 </pre>
 </div>
 </div>
@@ -342,7 +342,7 @@ Graduation rate of the class: 0.67%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Extract feature columns</span>
@@ -424,7 +424,7 @@ Feature values:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">preprocess_features</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -495,7 +495,7 @@ Feature values:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import any additional functionality you may need here</span>
@@ -508,7 +508,7 @@ Feature values:
 <span class="n">num_test</span> <span class="o">=</span> <span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">num_train</span>
 
 <span class="c1"># TODO: Shuffle and split the dataset into the number of training and testing points above</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="n">num_train</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="n">num_train</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stratify</span> <span class="o">=</span> <span class="n">y_all</span><span class="p">)</span>
 
 <span class="c1"># Show the results of the split</span>
 <span class="k">print</span> <span class="s2">&quot;Training set has {} samples.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -563,8 +563,8 @@ Testing set has 95 samples.
 <p><strong>Answer: </strong></p>
 <ol>
 <li>Naive Bayes - It is supposed to be good at spam filtering and document classification. It predicts relatively fast and can be trained on a small amount of data. One of the drawbacks is that it does not provide a good idea of how confident you should be in a prediction. I chose it because we have a relatively small amount of training data and this algorithm is good with small amounts of training data. We are also judged on the amount of computing resources it takes to make a prediction and this method is supposed to be extremely fast compared to some other algorithms.</li>
-<li>Support Vector Machines - SVM's are versatile and have been used in text and image classification and many uses in biology. The strengths of SVMs are that they work well with complicated domains with a clear margin of separation, they provide a fast prediction, and once it is trained, the model does not require much memory to store. Some of the weaknesses of SVMs are that they take a long time to train for large amounts of data, and that they don't work well with lots of noise in the data. They can be prone to overfitting. You also have to pick a kernel for more complicated domains which can be hard if you have no experience with picking kernels. I picked SVMs because they predict fast and use little memory.</li>
-<li>Decision trees - Decision trees are generally used for data mining and as parts of other machine learning algorithms. The strengths of decision trees are that they are easy to understand, they are very expressive, they usually require little data preparation, they predict quickly, and they work well for large data sets. The weaknesses of decision trees are that they are prone to overfitting, you are not guaranteed to get a globally optimal model, and they don't work well for certain types of problems (like XOR). They can also take a lot of memory to store if you have a lot of features. I picked decision trees because they predict quickly and they are easy to understand.</li>
+<li>Support Vector Machines - SVM's are versatile and have been used in text and image classification and many uses in biology. The strengths of SVMs are that they work well with complicated domains with a clear margin of separation, they provide a fast prediction, and once it is trained, the model does not require much memory to store. Some of the weaknesses of SVMs are that they take a long time to train for large amounts of data, and that they don't work well with lots of noise in the data. They can be prone to overfitting. You also have to pick a kernel for more complicated domains which can be hard if you have no experience with picking kernels. I picked SVMs because they predict fast and this data set seems to have a lot of features for a small amount of data.</li>
+<li>Decision trees - Decision trees are generally used for data mining and as parts of other machine learning algorithms. The strengths of decision trees are that they are easy to understand, they can handle categorical as well as numerical data, they are very expressive, they usually require little data preparation, they predict quickly, and they work well for large data sets. The weaknesses of decision trees are that they are prone to overfitting, you are not guaranteed to get a globally optimal model, and they don't work well for certain types of problems (like XOR). They can also take a lot of memory to store if you have a lot of features and if you re-order the features, it can change the result. I picked decision trees because they predict quickly and they are easy to understand. Also, our data set has numerical as well as categorical data which makes decision trees a good fit.</li>
 </ol>
 
 </div>
@@ -590,7 +590,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">train_classifier</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
@@ -663,7 +663,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import the three supervised learning models from sklearn</span>
@@ -710,58 +710,58 @@ Testing set has 95 samples.
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Training a GaussianNB using a training set size of 100. . .
 Trained model in 0.0019 seconds
-Made predictions in 0.0008 seconds.
-F1 score for training set: 0.8346.
-Made predictions in 0.0054 seconds.
-F1 score for test set: 0.7402.
-Training a GaussianNB using a training set size of 200. . .
-Trained model in 0.0066 seconds
-Made predictions in 0.0014 seconds.
-F1 score for training set: 0.7879.
-Made predictions in 0.0010 seconds.
-F1 score for test set: 0.6446.
-Training a GaussianNB using a training set size of 300. . .
-Trained model in 0.0023 seconds
-Made predictions in 0.0057 seconds.
-F1 score for training set: 0.7921.
 Made predictions in 0.0009 seconds.
-F1 score for test set: 0.6720.
+F1 score for training set: 0.7966.
+Made predictions in 0.0009 seconds.
+F1 score for test set: 0.6379.
+Training a GaussianNB using a training set size of 200. . .
+Trained model in 0.0179 seconds
+Made predictions in 0.0013 seconds.
+F1 score for training set: 0.8148.
+Made predictions in 0.0010 seconds.
+F1 score for test set: 0.7344.
+Training a GaussianNB using a training set size of 300. . .
+Trained model in 0.0077 seconds
+Made predictions in 0.0017 seconds.
+F1 score for training set: 0.8190.
+Made predictions in 0.0008 seconds.
+F1 score for test set: 0.7500.
 Training a SVC using a training set size of 100. . .
-Trained model in 0.0063 seconds
-Made predictions in 0.0023 seconds.
-F1 score for training set: 0.8591.
-Made predictions in 0.0022 seconds.
-F1 score for test set: 0.8333.
+Trained model in 0.0073 seconds
+Made predictions in 0.0025 seconds.
+F1 score for training set: 0.8707.
+Made predictions in 0.0075 seconds.
+F1 score for test set: 0.8000.
 Training a SVC using a training set size of 200. . .
-Trained model in 0.0362 seconds
-Made predictions in 0.0135 seconds.
-F1 score for training set: 0.8581.
-Made predictions in 0.0077 seconds.
-F1 score for test set: 0.8408.
+Trained model in 0.0196 seconds
+Made predictions in 0.0160 seconds.
+F1 score for training set: 0.8491.
+Made predictions in 0.0078 seconds.
+F1 score for test set: 0.8026.
 Training a SVC using a training set size of 300. . .
-Trained model in 0.0244 seconds
-Made predictions in 0.0159 seconds.
-F1 score for training set: 0.8584.
-Made predictions in 0.0052 seconds.
-F1 score for test set: 0.8462.
+Trained model in 0.0560 seconds
+Made predictions in 0.0361 seconds.
+F1 score for training set: 0.8701.
+Made predictions in 0.0051 seconds.
+F1 score for test set: 0.8026.
 Training a DecisionTreeClassifier using a training set size of 100. . .
-Trained model in 0.0021 seconds
-Made predictions in 0.0003 seconds.
-F1 score for training set: 1.0000.
-Made predictions in 0.0003 seconds.
-F1 score for test set: 0.6667.
-Training a DecisionTreeClassifier using a training set size of 200. . .
-Trained model in 0.0133 seconds
-Made predictions in 0.0006 seconds.
-F1 score for training set: 1.0000.
-Made predictions in 0.0003 seconds.
-F1 score for test set: 0.7737.
-Training a DecisionTreeClassifier using a training set size of 300. . .
-Trained model in 0.0105 seconds
-Made predictions in 0.0007 seconds.
+Trained model in 0.0022 seconds
+Made predictions in 0.0045 seconds.
 F1 score for training set: 1.0000.
 Made predictions in 0.0004 seconds.
-F1 score for test set: 0.6935.
+F1 score for test set: 0.6281.
+Training a DecisionTreeClassifier using a training set size of 200. . .
+Trained model in 0.0125 seconds
+Made predictions in 0.0008 seconds.
+F1 score for training set: 1.0000.
+Made predictions in 0.0004 seconds.
+F1 score for test set: 0.6393.
+Training a DecisionTreeClassifier using a training set size of 300. . .
+Trained model in 0.0149 seconds
+Made predictions in 0.0008 seconds.
+F1 score for training set: 1.0000.
+Made predictions in 0.0047 seconds.
+F1 score for test set: 0.7194.
 </pre>
 </div>
 </div>
@@ -799,23 +799,23 @@ F1 score for test set: 0.6935.
 <tr>
 <td style="text-align:center">100</td>
 <td style="text-align:center">.0019</td>
-<td style="text-align:center">.0054</td>
-<td style="text-align:center">.8346</td>
-<td style="text-align:center">.7402</td>
+<td style="text-align:center">.0009</td>
+<td style="text-align:center">.7966</td>
+<td style="text-align:center">.6379</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">.0066</td>
+<td style="text-align:center">.0179</td>
 <td style="text-align:center">.0010</td>
-<td style="text-align:center">.7879</td>
-<td style="text-align:center">.6446</td>
+<td style="text-align:center">.8148</td>
+<td style="text-align:center">.7344</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">.0023</td>
-<td style="text-align:center">.0009</td>
-<td style="text-align:center">.7921</td>
-<td style="text-align:center">.6720</td>
+<td style="text-align:center">.0077</td>
+<td style="text-align:center">.0008</td>
+<td style="text-align:center">.8190</td>
+<td style="text-align:center">.7500</td>
 </tr>
 </tbody>
 </table>
@@ -832,24 +832,24 @@ F1 score for test set: 0.6935.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">.0063</td>
-<td style="text-align:center">.0022</td>
-<td style="text-align:center">.8591</td>
-<td style="text-align:center">.8333</td>
+<td style="text-align:center">.0073</td>
+<td style="text-align:center">.0075</td>
+<td style="text-align:center">.8707</td>
+<td style="text-align:center">.8000</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">.0362</td>
-<td style="text-align:center">.0077</td>
-<td style="text-align:center">.8581</td>
-<td style="text-align:center">.8408</td>
+<td style="text-align:center">.0196</td>
+<td style="text-align:center">.0078</td>
+<td style="text-align:center">.8491</td>
+<td style="text-align:center">.8026</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">.0244</td>
-<td style="text-align:center">.0052</td>
-<td style="text-align:center">.8584</td>
-<td style="text-align:center">.8462</td>
+<td style="text-align:center">.0560</td>
+<td style="text-align:center">.0051</td>
+<td style="text-align:center">.8701</td>
+<td style="text-align:center">.8026</td>
 </tr>
 </tbody>
 </table>
@@ -866,24 +866,24 @@ F1 score for test set: 0.6935.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">.0021</td>
-<td style="text-align:center">.0003</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">.6667</td>
+<td style="text-align:center">.0022</td>
+<td style="text-align:center">.0004</td>
+<td style="text-align:center">1.0000</td>
+<td style="text-align:center">.6281</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">.0133</td>
-<td style="text-align:center">.0003</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">.7737</td>
+<td style="text-align:center">.0125</td>
+<td style="text-align:center">.0004</td>
+<td style="text-align:center">1.0000</td>
+<td style="text-align:center">.6393</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">.0105</td>
-<td style="text-align:center">.0004</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">.6935</td>
+<td style="text-align:center">.0149</td>
+<td style="text-align:center">.0047</td>
+<td style="text-align:center">1.0000</td>
+<td style="text-align:center">.7194</td>
 </tr>
 </tbody>
 </table>
@@ -917,8 +917,8 @@ F1 score for test set: 0.6935.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
-<p>I would choose the decision tree classifier because its computational cost is the lowest and I believe the F1 score will dramatically improve on the test set with some tuning of the model.</p>
-<p>That being said, I'm not sure why computational cost is a real issue in this scenario. All times were under a tenth of a second for my old computer which makes the computational cost almost nothing. The accuracy would be much more important in this scenario because accurately identifying the students at risk will help achieve the goal of 95% graduation rate. Based on the F1 scores, the SVM option seems the best, but that is probably because the decision tree was way overfitted. Based on performance, the decision tree is the obvious way to go. It has a relatively good f1 score for the test set which I think can be improved by tuning the model which will make the predictions faster, but the training slower.</p>
+<p>I would choose the SVM because it has the best F<sub>1</sub> score and since all the prediction times were under .01 sec that should be fast enough.</p>
+<p>The decision tree was obviously over-fitted (due to lack of pruning) and naive-bayes had a lower F<sub>1</sub> score which makes SVM the best choice.</p>
 
 </div>
 </div>
@@ -939,7 +939,7 @@ F1 score for test set: 0.6935.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
-<p>Decision trees are very intuitive. A decision tree is basically a series of if-then statements. The machine learning algorithm builds the tree of if-then statements by using the statement that gives the maximum information gain. For example if you had two candidate if then statements and one of them divided the data exactly in half and the other divided the data into a 1/10th 9/10ths split, you would likely learn more from the first one since you can throw out half of the data points. For the second option most of the time you could only rule out 1/10th of the data points assuming the data was uniformly distributed. Once the tree is built, to classify a new data point, you just need to start with the first if-then and go down the tree until there are no more questions to ask. Once you reach a leaf in the tree, you have classified your data.</p>
+<p>A support vector machine works by finding the best margin of separation. A margin of separation is basically the space between where the data was divided and the nearest data points. By maximizing the margin of separation, we will get the best prediction since points close to the divide are more likely to fall in the correct region because of the buffer zone. The points close to the divide are the hardest to classify so if we can predict those better, the points far from the divide are easy to classify.</p>
 
 </div>
 </div>
@@ -970,7 +970,7 @@ F1 score for test set: 0.6935.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import &#39;GridSearchCV&#39; and &#39;make_scorer&#39;</span>
@@ -979,13 +979,13 @@ F1 score for test set: 0.6935.
 
 <span class="c1"># TODO: Create the parameters list you wish to tune</span>
 <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;max_depth&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> 
-    <span class="s1">&#39;min_samples_split&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> 
-    <span class="s1">&#39;criterion&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;entropy&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;min_samples_leaf&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">]}</span>
+    <span class="s1">&#39;C&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="mi">80</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+    <span class="s1">&#39;kernel&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span><span class="s1">&#39;poly&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;degree&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+    <span class="s1">&#39;gamma&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="mo">001</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="mf">48.0</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">]}</span>
 
 <span class="c1"># TODO: Initialize the classifier</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># TODO: Make an f1 scoring function using &#39;make_scorer&#39; </span>
 <span class="n">f1_scorer</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="s1">&#39;yes&#39;</span><span class="p">)</span>
@@ -1015,11 +1015,11 @@ F1 score for test set: 0.6935.
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Made predictions in 0.0004 seconds.
-Tuned model has a training F1 score of 0.8371.
-Made predictions in 0.0004 seconds.
-Tuned model has a testing F1 score of 0.8219.
-{&apos;min_samples_split&apos;: 2, &apos;criterion&apos;: &apos;gini&apos;, &apos;max_depth&apos;: 3, &apos;min_samples_leaf&apos;: 1}
+<pre>Made predictions in 0.0146 seconds.
+Tuned model has a training F1 score of 0.8720.
+Made predictions in 0.0049 seconds.
+Tuned model has a testing F1 score of 0.8079.
+{&apos;kernel&apos;: &apos;rbf&apos;, &apos;C&apos;: 1.1, &apos;gamma&apos;: 0.020833333333333332, &apos;degree&apos;: 2}
 </pre>
 </div>
 </div>
@@ -1044,8 +1044,8 @@ Tuned model has a testing F1 score of 0.8219.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
-<p>The F<sub>1</sub> score for training is .8371 and the F<sub>1</sub> score for testing is .8219.</p>
-<p>The training F<sub>1</sub> score has gotten a lot lower, but that's OK because the testing score got much higher. Since they are about equal, I don't expect the testing score to get significantly higher unless I can get the training score higher.</p>
+<p>The F<sub>1</sub> score for training is .8720 and the F<sub>1</sub> score for testing is .8079.</p>
+<p>The F<sub>1</sub> scores didn't change much. It appears the optimal parameters were very close to the default parameters for SVC in sklearn.</p>
 
 </div>
 </div>
