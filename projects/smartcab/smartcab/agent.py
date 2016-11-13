@@ -38,9 +38,10 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Update epsilon using a decay function of your choice
-        # self.epsilon = pow(.99, self.num_trials)
+        # self.epsilon -= .01
+        # self.epsilon = pow(.97, self.num_trials)
         # self.epsilon = 1.0/(self.num_trials * self.num_trials)
-        # self.epsilon = math.exp(-.02 * self.num_trials)
+        # self.epsilon = math.exp(-.03 * self.num_trials)
         self.epsilon = math.cos(.01 * self.num_trials)
         # Update additional class parameters as needed
         self.num_trials += 1.0
@@ -128,8 +129,10 @@ class LearningAgent(Agent):
             if random.random() < self.epsilon:
                 action = random.choice(self.valid_actions)
             else:
-                action = max(self.Q[state], key=self.Q[state].get)
- 
+                max_val = max(self.Q[state].values())
+                choices = [k for k, v in self.Q[state].iteritems() if v == max_val]
+                action = random.choice(choices)
+
         return action
 
 
