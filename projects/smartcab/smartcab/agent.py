@@ -38,11 +38,11 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Update epsilon using a decay function of your choice
-        # self.epsilon -= .01
+        # self.epsilon -= .05
         # self.epsilon = pow(.97, self.num_trials)
         # self.epsilon = 1.0/(self.num_trials * self.num_trials)
         # self.epsilon = math.exp(-.03 * self.num_trials)
-        self.epsilon = math.cos(.01 * self.num_trials)
+        self.epsilon = math.cos(.015 * self.num_trials)
         # Update additional class parameters as needed
         self.num_trials += 1.0
         # If 'testing' is True, set epsilon and alpha to 0
@@ -146,10 +146,7 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        next_state = self.state
-        utility_of_next_state = self.get_maxQ(next_state)
-        utility_of_state = reward + utility_of_next_state
-        self.Q[state][action] = (1.0 - self.alpha) * self.Q[state][action] + self.alpha * utility_of_state
+        self.Q[state][action] = (1.0 - self.alpha) * self.Q[state][action] + self.alpha * reward
         return
 
 
