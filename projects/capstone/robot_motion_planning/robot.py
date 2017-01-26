@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class Robot(object):
     def __init__(self, maze_dim):
@@ -12,6 +13,7 @@ class Robot(object):
         self.location = [0, 0]
         self.heading = 'up'
         self.maze_dim = maze_dim
+
 
     def next_move(self, sensors):
         '''
@@ -31,11 +33,11 @@ class Robot(object):
         is ignored.
 
         If the robot wants to end a run (e.g. during the first training run in
-        the maze) then returing the tuple ('Reset', 'Reset') will indicate to
+        the maze) then returning the tuple ('Reset', 'Reset') will indicate to
         the tester to end the run and return the robot to the start.
         '''
 
-        rotation = 0
-        movement = 0
+        rotation = random.choice([-90, 0, 90])
+        movement = random.choice(range(-3, 3))
 
         return rotation, movement

@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
-Joe Udacity  
-December 31st, 2050
+David Christensen  
+January 17th, 2017
 
 ## I. Definition
 _(approx. 1-2 pages)_
@@ -11,17 +11,32 @@ In this section, look to provide a high-level overview of the project in laymanâ
 - _Has an overview of the project been provided, such as the problem domain, project origin, and related datasets or input data?_
 - _Has enough background information been given so that an uninformed reader would understand the problem domain and following problem statement?_
 
+Micromouse competitions have been around since the late 1970's. In the competition, a robot mouse solves a 16x16 maze. The mouse gets two runs, the first to explore the maze and the second to find it's way to the goal in the center of the maze. The mice are ranked based on how much time they use in the first and second runs. 
+
+While the real micromouse competitions use physical robot mice, this project just simulates the maze and movement of the mouse in discrete timesteps. Each maze is a virtual grid. It is stored in a text file that defines where the walls are. The mazes range from 12x12 to 16x16.
+
 ### Problem Statement
 In this section, you will want to clearly define the problem that you are trying to solve, including the strategy (outline of tasks) you will use to achieve the desired solution. You should also thoroughly discuss what the intended solution will be for this problem. Questions to ask yourself when writing this section:
 - _Is the problem statement clearly defined? Will the reader understand what you are expecting to solve?_
 - _Have you thoroughly discussed how you will attempt to solve the problem?_
 - _Is an anticipated solution clearly defined? Will the reader understand what results you are looking for?_
 
+Like the real competitions, the mouse gets two runs, the first to explore the maze and the second to get to the center as fast as possible.
+
+There are many algorithms for finding the shortest path of a maze. Three of the major algorithms will be compared: Dijkstra's algorithm, flood fill, and A* which is a variation on Djikstra's algorithm. Each will be compared to a base model where the mouse makes random choices. Supposedly A* is the optimal algorithm in many cases and it is expected to outperform the other algorithms in general.
+
 ### Metrics
 In this section, you will need to clearly define the metrics or calculations you will use to measure performance of a model or result in your project. These calculations and metrics should be justified based on the characteristics of the problem and problem domain. Questions to ask yourself when writing this section:
 - _Are the metrics youâ€™ve chosen to measure the performance of your models clearly discussed and defined?_
 - _Have you provided reasonable justification for the metrics chosen based on the problem and solution?_
 
+The mouse is scored based on this formula: 
+
+N2 + N1/30 where N1+N2 <= 1000
+
+Where N1 is the number of moves in the first run and N2 is the number of moves in the second run. This means each move in the second run is 30 times more costly than each move in the first run. The goal is to get the lowest total score.
+
+In addition to the score, the models will also be compared on the length of each run to show the tradeoff of exploration time vs. speed.
 
 ## II. Analysis
 _(approx. 2-4 pages)_
@@ -33,11 +48,18 @@ In this section, you will be expected to analyze the data you are using for the 
 - _If a dataset is **not** present for this problem, has discussion been made about the input space or input data for your problem?_
 - _Are there any abnormalities or characteristics about the input space or dataset that need to be addressed? (categorical variables, missing values, outliers, etc.)_
 
+The mazes are defined by input files which have 4-bit integers where the bits represent which sides of each square have walls. The mouse can occupy one square at a time and moves in discrete jumps. The mouse cannot move through walls. The center of the maze is a 2x2 goal area. After the mouse reaches the goal on the first run, it can keep exploring or choose to end the run. The mouse starts both runs in the bottom left corner, facing up. The starting square has walls on three sides with the open side facing up. There is a wall running around the outside of the maze blocking the mouse from leaving.
+
 ### Exploratory Visualization
 In this section, you will need to provide some form of visualization that summarizes or extracts a relevant characteristic or feature about the data. The visualization should adequately support the data being used. Discuss why this visualization was chosen and how it is relevant. Questions to ask yourself when writing this section:
 - _Have you visualized a relevant characteristic or feature about the dataset or input data?_
 - _Is the visualization thoroughly analyzed and discussed?_
 - _If a plot is provided, are the axes, title, and datum clearly defined?_
+
+![Maze 1](images/maze 1.png )
+
+Wednesday, 25. January 2017 09:14PM 
+[Google](https://www.google.com) 
 
 ### Algorithms and Techniques
 In this section, you will need to discuss the algorithms and techniques you intend to use for solving the problem. You should justify the use of each one based on the characteristics of the problem and the problem domain. Questions to ask yourself when writing this section:

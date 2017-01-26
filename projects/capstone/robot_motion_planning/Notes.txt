@@ -1,0 +1,3 @@
+Try A* or breadth-first for solving shortest path.
+https://en.wikipedia.org/wiki/Maze_solving_algorithm
+Look at exploration algorithms - Q learning sort of?
