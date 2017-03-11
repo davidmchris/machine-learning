@@ -4,6 +4,7 @@ from PriorityQueue import PriorityQueue
 from Position import Position
 from Direction import Direction
 
+
 class AStarPlanner(Planner):
     def __init__(self, maze_map):
         """
@@ -66,8 +67,8 @@ class AStarPlanner(Planner):
         x_dist_to_goal = min(abs(self.maze_dim / 2 - location.x), abs(location.x - self.maze_dim / 2 + 1))
         y_dist_to_goal = min(abs(self.maze_dim / 2 - location.y), abs(location.y - self.maze_dim / 2 + 1))
 
-        x_timesteps_to_goal = 0 if x_dist_to_goal == 0 else (x_dist_to_goal-1)/3+1
-        y_timesteps_to_goal = 0 if y_dist_to_goal == 0 else (y_dist_to_goal-1)/3+1
+        x_timesteps_to_goal = 0 if x_dist_to_goal == 0 else (x_dist_to_goal - 1) / 3 + 1
+        y_timesteps_to_goal = 0 if y_dist_to_goal == 0 else (y_dist_to_goal - 1) / 3 + 1
         return x_timesteps_to_goal + y_timesteps_to_goal
 
     def get_cost(self, move):
@@ -85,39 +86,50 @@ class AStarPlanner(Planner):
         :param heading: The current direction the robot is pointing
         """
         open_nodes = PriorityQueue()
-        closed_nodes = {}
+        closed_nodes = set()
+        came_from = {}  # The key is the end state, the value is a tuple of g, move, and start state
 
         initial_state = (location, heading)
         g = 0
         h = self.get_heuristic_value(initial_state)
         f = g + h
-        initial_node = (initial_state, g, None)
-        open_nodes.insert(f, initial_node)
+        open_nodes.insert(f, initial_state)
+        came_from[initial_state] = (g, None, None)
         current_state = initial_state
-        current_node = initial_node
-        while len(open_nodes) > 0 and not self.maze_map.at_goal(current_state[0]):
-            while current_node[0] in closed_nodes:
-                current_node = open_nodes.pop_min()
-            current_state = current_node[0]
+        while len(open_nodes) > 0:
+            while current_state in closed_nodes:
+                current_state = open_nodes.pop_min()
+            closed_nodes.add(current_state)
+
+            if self.maze_map.at_goal(current_state[0]):
+                return self.create_policy(current_state, initial_state, came_from)
+
             moves = self.get_possible_moves(current_state)
             for move in moves:
                 new_state = self.get_move_result(current_state, move)
-                g = current_node[1] + self.get_cost(move)
+                if new_state in closed_nodes:
+                    continue
+                g = came_from[current_state][0] + self.get_cost(move)
                 h = self.get_heuristic_value(new_state)
                 f = g + h
-                new_node = (new_state, g, move)
-                if not new_state in closed_nodes:
-                    open_nodes.insert(f, new_node)
-            closed_nodes[current_node[0]] = (current_node[1], current_node[2])
+                if new_state not in open_nodes:
+                    open_nodes.insert(f, new_state)
+                elif new_state in came_from and g >= came_from[new_state][0]:
+                    continue
+                came_from[new_state] = (g, move, current_state)
+                open_nodes.update_priority(new_state,f)
 
+        return "No path to goal!"
+
+    def create_policy(self, goal_state, initial_state, came_from):
         # Get the policy
         self.policy = []
-        print "-------"
+        current_state = goal_state
         while current_state != initial_state:
-            print current_state[0].x, current_state[0].y, current_state[1].nesw
-            move = closed_nodes[current_state][1]
+            move = came_from[current_state][1]
             self.policy.append(move)
-            current_state = self.go_back(current_state, move)
+            current_state = came_from[current_state][2]
+        return self.policy
 
     def display_heuristic(self):
         heuristic = []
