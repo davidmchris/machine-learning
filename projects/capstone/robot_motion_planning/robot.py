@@ -1,5 +1,11 @@
-import numpy as np
-import random
+from maze import Maze
+from Visualizer import Visualizer
+from RandomPlanner import RandomPlanner
+from AStarPlanner import  AStarPlanner
+from MazeMap import MazeMap
+from Direction import Direction
+from Position import Position
+import os
 
 class Robot(object):
     def __init__(self, maze_dim):
@@ -10,10 +16,14 @@ class Robot(object):
         the robot is placed in.
         '''
 
-        self.location = [0, 0]
-        self.heading = 'up'
-        self.maze_dim = maze_dim
-
+        self.location = Position(0, 0)
+        self.heading = Direction(0)
+        self.maze_map = MazeMap(maze_dim)
+        self.planner = AStarPlanner(self.maze_map)
+        #self.planner = RandomPlanner(self.maze_map)
+        self.planner.replan(self.location, self.heading)
+        self.planner.display_heuristic()
+        self.count = 0
 
     def next_move(self, sensors):
         '''
@@ -36,8 +46,35 @@ class Robot(object):
         the maze) then returning the tuple ('Reset', 'Reset') will indicate to
         the tester to end the run and return the robot to the start.
         '''
-
-        rotation = random.choice([-90, 0, 90])
-        movement = random.choice(range(-3, 3))
+        maze_updated = self.maze_map.update(self.location, self.heading, sensors)  # update state
+        self.maze_map.dump_to_file(os.path.join(os.curdir, "known_maze.txt"))
+        if maze_updated:
+            self.planner.replan(self.location, self.heading)
+            self.show_current_policy_and_map()
+            self.count += 1
+        rotation, movement = self.planner.next_move(self.location, self.heading)  # choose next action
+        # Assumption: The planner will not choose a value that will run into a wall
+        if rotation == "Reset" and movement == "Reset":
+            self.reset()
+        else:
+            self.move(rotation, movement)
 
         return rotation, movement
+
+    def move(self, rotation, movement):
+        self.heading = self.heading.rotate(rotation)
+        direction_of_movement = self.heading if movement > 0 else self.heading.flip()
+        for i in range(abs(movement)):
+            self.location = self.location.add(direction_of_movement)
+
+    def reset(self):
+        self.location = Position(0, 0)
+        self.heading = Direction(0)
+        self.planner.replan(self.location, self.heading)
+        self.show_current_policy_and_map()
+
+    def show_current_policy_and_map(self):
+        vis = Visualizer(self.maze_map.dim)
+        vis.draw_maze(Maze('known_maze.txt'))
+        vis.draw_policy(reversed(self.planner.policy), self.location, self.heading)
+        vis.show_window()

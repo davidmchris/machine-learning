@@ -1,3 +1,52 @@
 Try A* or breadth-first for solving shortest path.
 https://en.wikipedia.org/wiki/Maze_solving_algorithm
 Look at exploration algorithms - Q learning sort of?
+
+look at information gain as a potential reward
+look at number of times visited as a potential reward
+
+How to end first run:
+End as soon as entered goal area
+How to prove shortest path? - Explore whole maze and use Djikstra's algorithm
+
+
+need to create an orientation class to handle heading and all transformations related to it
+probably should create a location class also or pass it in to orientation function to get next location?
+
+
+
+Need a planner class which contains the known maze
+If the planner contains the maze, it can represent it in any way it wants
+
+I only need to know the next step each time
+
+I probably want to use A* to get to the center initially and for run 2
+After I reach the center in run 1, I could use a different logic to find any alternate or shorter paths
+Maybe just a different heuristic function?
+The heuristic function could be based on information gain or something
+Once I reach the goal in run 1, I get all moves for free and I can calculate the shortest path to the goal. That means
+    I can stop when I have just enough timesteps to finish the maze.
+
+The mouse doesn't need a back sensor because the other sensors show anywhere you can move.
+
+for A*
+g values
+h values
+f values
+
+
+Since the orientation of the robot doesn't really play into the state of the robot since it can move forward or
+backward and turn 90 degrees. That means if it were in an open area, it could reach the three squares in front by moving
+forward, the three squares on either side by turning left or right and moving forward, and it could move in reverse to
+get to the three squares behind. The fact that the reachable squares in one timestep is rotationally symmetric means
+the orientation of the robot doesn't affect the state of the robot.
+
+I actually need orientation for planning though, because I need to know what action to take which includes a turn.
+
+maximum of 15 moves per location
+
+how do I tell the A* to re-plan?
+When the map is updated
+
+The original heuristic was not good. Spaces from the goal doesn't work because the robot can move up to three spaces for
+the same cost as one space. The new heuristic should be based on the fact that the robot can move three spaces in a turn.
