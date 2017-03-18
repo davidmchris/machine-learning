@@ -12,7 +12,7 @@ class AStarPlanner(Planner):
         :type maze_map: MazeMap
         :param maze_map: The maze map stores and updates information about the maze.
         """
-        self.maze_map = maze_map
+        super(AStarPlanner, self).__init__(maze_map)
         self.maze_dim = maze_map.dim
         self.policy = []  # list of tuples of moves
 
@@ -59,17 +59,26 @@ class AStarPlanner(Planner):
             start_location = start_location.add(direction_of_movement)
         return start_location, start_heading
 
+    # def get_heuristic_value(self, state):
+    #     location = state[0]
+    #     if self.maze_map.at_goal(location):
+    #         return 0
+    #     x_dist_to_goal = min(abs(self.maze_dim / 2 - location.x), abs(location.x - self.maze_dim / 2 + 1))
+    #     y_dist_to_goal = min(abs(self.maze_dim / 2 - location.y), abs(location.y - self.maze_dim / 2 + 1))
+    #     x_timesteps_to_goal = 0 if x_dist_to_goal == 0 else (x_dist_to_goal - 1) + 1
+    #     y_timesteps_to_goal = 0 if y_dist_to_goal == 0 else (y_dist_to_goal - 1) + 1
+    #     return x_timesteps_to_goal + y_timesteps_to_goal
     def get_heuristic_value(self, state):
         location = state[0]
         if self.maze_map.at_goal(location):
             return 0
-
         x_dist_to_goal = min(abs(self.maze_dim / 2 - location.x), abs(location.x - self.maze_dim / 2 + 1))
         y_dist_to_goal = min(abs(self.maze_dim / 2 - location.y), abs(location.y - self.maze_dim / 2 + 1))
-
         x_timesteps_to_goal = 0 if x_dist_to_goal == 0 else (x_dist_to_goal - 1) / 3 + 1
         y_timesteps_to_goal = 0 if y_dist_to_goal == 0 else (y_dist_to_goal - 1) / 3 + 1
         return x_timesteps_to_goal + y_timesteps_to_goal
+    # def get_heuristic_value(self, state):
+    #     return 0
 
     def get_cost(self, move):
         """
@@ -85,6 +94,9 @@ class AStarPlanner(Planner):
         :type heading: Direction
         :param heading: The current direction the robot is pointing
         """
+        print "========================"
+        print "        Replan          "
+        print "========================"
         open_nodes = PriorityQueue()
         closed_nodes = set()
         came_from = {}  # The key is the end state, the value is a tuple of g, move, and start state
@@ -99,10 +111,12 @@ class AStarPlanner(Planner):
         while len(open_nodes) > 0:
             while current_state in closed_nodes:
                 current_state = open_nodes.pop_min()
+
             closed_nodes.add(current_state)
 
             if self.maze_map.at_goal(current_state[0]):
-                return self.create_policy(current_state, initial_state, came_from)
+                pol = self.create_policy(current_state, initial_state, came_from)
+                return self.policy
 
             moves = self.get_possible_moves(current_state)
             for move in moves:
@@ -114,12 +128,16 @@ class AStarPlanner(Planner):
                 f = g + h
                 if new_state not in open_nodes:
                     open_nodes.insert(f, new_state)
-                elif new_state in came_from and g >= came_from[new_state][0]:
+                elif new_state in came_from and f >= open_nodes.get_priority(new_state):
                     continue
                 came_from[new_state] = (g, move, current_state)
                 open_nodes.update_priority(new_state,f)
 
         return "No path to goal!"
+
+    def state_str(self,state):
+        return "({}, {}) {}".format(state[0].x, state[0].y, state[1].letter())
+
 
     def create_policy(self, goal_state, initial_state, came_from):
         # Get the policy

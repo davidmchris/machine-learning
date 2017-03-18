@@ -38,3 +38,13 @@ class Direction(object):
 
     def angle(self):
         return 90*self.nesw
+
+    def letter(self):
+        if self.nesw == 0:
+            return "n"
+        if self.nesw == 1:
+            return "e"
+        if self.nesw == 2:
+            return "s"
+        if self.nesw == 3:
+            return "w"

@@ -2,6 +2,7 @@ from MazeCell import MazeCell
 from Position import Position
 from Direction import Direction
 from Wall import Wall
+import numpy as np
 
 n = Direction(0)
 e = Direction(1)
@@ -10,8 +11,13 @@ w = Direction(3)
 
 
 class MazeMap(object):
-    def __init__(self, maze_dim):
-        self.dim = maze_dim
+    def __init__(self, maze_dim = None, file_path = None):
+        if file_path is not None:
+            with open(file_path, 'rb') as f_in:
+                # First line should be an integer with the maze dimensions
+                self.dim = int(f_in.next())
+        else:
+            self.dim = maze_dim
         self.cells = {}
         for x in range(self.dim):
             for y in range(self.dim):
@@ -24,7 +30,7 @@ class MazeMap(object):
                 else:
                     cell.walls[w] = self.cells[pos.add(w)].walls[e]
                 # East wall
-                if pos.x == maze_dim-1 or (pos.x == 0 and pos.y == 0):
+                if pos.x == self.dim-1 or (pos.x == 0 and pos.y == 0):
                     cell.walls[e] = Wall(True)
                 else:
                     cell.walls[e] = Wall(None)
@@ -34,10 +40,12 @@ class MazeMap(object):
                 else:
                     cell.walls[s] = self.cells[pos.add(s)].walls[n]
                 # North wall
-                if pos.y == maze_dim-1:
+                if pos.y == self.dim-1:
                     cell.walls[n] = Wall(True)
                 else:
                     cell.walls[n] = Wall(None)
+        if file_path is not None:
+            self.read_from_file(file_path)
 
     def update(self, position, heading, sensors):
         """
@@ -101,3 +109,60 @@ class MazeMap(object):
                     if j < self.dim - 1:
                         f.write(",")
                 f.write("\n")
+
+    def read_from_file(self, file_path):
+        """
+        This is a modified copy of the __init__ function in Udacity's maze.py
+        :param file_path: The path to the file
+        :return: Doesn't return anything
+        """
+        with open(file_path, 'rb') as f_in:
+
+            # First line should be an integer with the maze dimensions
+            self.dim = int(f_in.next())
+
+            # Subsequent lines describe the permissability of walls
+            walls = []
+            for line in f_in:
+                walls.append(map(int,line.split(',')))
+            wall_vals = np.array(walls)
+
+        # # Perform validation on maze
+        # # Maze dimensions
+        # if self.dim % 2:
+        #     raise Exception('Maze dimensions must be even in length!')
+        # if wall_vals.shape != (self.dim, self.dim):
+        #     raise Exception('Maze shape does not match dimension attribute!')
+        #
+        # # Wall permeability
+        # wall_errors = []
+        # # vertical walls
+        # for x in range(self.dim-1):
+        #     for y in range(self.dim):
+        #         if (wall_vals[x,y] & 2 != 0) != (wall_vals[x+1,y] & 8 != 0):
+        #             wall_errors.append([(x,y), 'v'])
+        # # horizontal walls
+        # for y in range(self.dim-1):
+        #     for x in range(self.dim):
+        #         if (wall_vals[x,y] & 1 != 0) != (wall_vals[x,y+1] & 4 != 0):
+        #             wall_errors.append([(x,y), 'h'])
+        #
+        # if wall_errors:
+        #     for cell, wall_type in wall_errors:
+        #         if wall_type == 'v':
+        #             cell2 = (cell[0]+1, cell[1])
+        #             print 'Inconsistent vertical wall betweeen {} and {}'.format(cell, cell2)
+        #         else:
+        #             cell2 = (cell[0], cell[1]+1)
+        #             print 'Inconsistent horizontal wall betweeen {} and {}'.format(cell, cell2)
+        #     raise Exception('Consistency errors found in wall specifications!')
+
+        for x in range(self.dim):
+            for y in range(self.dim):
+                pos = Position(x, y)
+                self.cells[pos].walls[n].is_wall = (wall_vals[x,y] & 1) == 0
+                self.cells[pos].walls[e].is_wall = (wall_vals[x,y] & 2) == 0
+                self.cells[pos].walls[s].is_wall = (wall_vals[x,y] & 4) == 0
+                self.cells[pos].walls[w].is_wall = (wall_vals[x,y] & 8) == 0
+
+

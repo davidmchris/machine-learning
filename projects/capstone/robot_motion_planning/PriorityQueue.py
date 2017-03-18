@@ -1,40 +1,49 @@
+from collections import deque
+
 class PriorityQueue:
-    def __init__(self):
-        self.priorities_index = {}
-        self.items_index = {}
+    def __init__(self, lifo=True):
+        self.is_lifo = lifo
+        self.q = {}
+        self.insert_count = 0
 
     def insert(self, priority, item):
         # type: (int, object) -> None
-        if self.items_index.has_key(item):
-            raise Exception("Item already in queue. Did you mean to use update_priority?")
-        entry = PriorityQueueEntry(priority, item)
-        if priority in self.priorities_index:
-            self.priorities_index[priority].append(entry)
-        else:
-            self.priorities_index[priority] = [entry]
-        self.items_index[item] = entry
+        if item in self.q:
+            raise Exception("Item already in queue. Use update_priority instead.")
+        self.q[item] = (priority, self.insert_count)
+        self.insert_count += 1
 
     def pop_min(self):
-        min_entry = self.priorities_index.popitem()
-        priority = min_entry[0]
-        elements = min_entry[1]
-        value_to_pop = elements.pop()
-        if len(elements) != 0:
-            self.priorities_index[priority] = elements
-        return value_to_pop.item
+        key, value = self.q.popitem()
+        self.q[key] = value
+        min_priority = value[0]
+        best_insert_index = value[1]
+        min_item = key
+        for i in self.q:
+            priority = self.q[i][0]
+            insert_index = self.q[i][1]
+            if priority < min_priority:
+                min_priority = priority
+                best_insert_index = insert_index
+                min_item = i
+            elif priority == min_priority:
+                if best_insert_index > insert_index == self.is_lifo:
+                    min_priority = priority
+                    best_insert_index = insert_index
+                    min_item = i
+        self.q.pop(min_item)
+        return min_item
 
     def update_priority(self, item, priority):
-        self.items_index[item].priority = priority
+        self.q[item] = (priority, self.insert_count)
+        self.insert_count += 1
+
+    def get_priority(self, item):
+        return self.q[item][0]
 
     def __len__(self):
         """This returns the number of values in the queue."""
-        return len(self.items_index)
+        return len(self.q)
 
     def __contains__(self, item):
-        return self.items_index.has_key(item)
-
-
-class PriorityQueueEntry:
-    def __init__(self, priority, item):
-        self.priority = priority
-        self.item = item
+        return item in self.q

@@ -47,10 +47,10 @@ class Robot(object):
         the tester to end the run and return the robot to the start.
         '''
         maze_updated = self.maze_map.update(self.location, self.heading, sensors)  # update state
-        #self.maze_map.dump_to_file(os.path.join(os.curdir, "known_maze.txt"))
+        # self.maze_map.dump_to_file(os.path.join(os.curdir, "known_maze.txt"))
         if maze_updated:
             self.planner.replan(self.location, self.heading)
-            #self.show_current_policy_and_map()
+            # self.show_current_policy_and_map()
             self.count += 1
         rotation, movement = self.planner.next_move(self.location, self.heading)  # choose next action
         # Assumption: The planner will not choose a value that will run into a wall
