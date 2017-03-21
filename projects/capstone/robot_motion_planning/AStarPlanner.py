@@ -21,26 +21,6 @@ class AStarPlanner(Planner):
             return "Reset", "Reset"
         return self.policy.pop()
 
-    def get_possible_moves(self, state):
-        location = state[0]
-        heading = state[1]
-        possible_moves = []
-        for rot in [90, 0, -90]:
-            for mov in range(-3, 4):
-                if self.maze_map.check_valid_move(location, heading, rot, mov):
-                    possible_moves.append((rot, mov))
-        return possible_moves
-
-    def get_move_result(self, state, move):
-        location = state[0]
-        heading = state[1]
-        new_heading = heading.rotate(move[0])
-        new_location = location
-        direction_of_movement = new_heading if move[1] > 0 else new_heading.flip()
-        for i in range(abs(move[1])):
-            new_location = new_location.add(direction_of_movement)
-        return new_location, new_heading
-
     def go_back(self, end_state, move):
         """
         Gets the original location and heading given a final location and heading and the move it took to get there.
@@ -94,10 +74,7 @@ class AStarPlanner(Planner):
         :type heading: Direction
         :param heading: The current direction the robot is pointing
         """
-        print "========================"
-        print "        Replan          "
-        print "========================"
-        open_nodes = PriorityQueue()
+        open_nodes = PriorityQueue(lifo=False)
         closed_nodes = set()
         came_from = {}  # The key is the end state, the value is a tuple of g, move, and start state
 
@@ -118,7 +95,7 @@ class AStarPlanner(Planner):
                 pol = self.create_policy(current_state, initial_state, came_from)
                 return self.policy
 
-            moves = self.get_possible_moves(current_state)
+            moves = self.get_possible_moves(current_state[0], current_state[1])
             for move in moves:
                 new_state = self.get_move_result(current_state, move)
                 if new_state in closed_nodes:

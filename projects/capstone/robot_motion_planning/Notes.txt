@@ -50,3 +50,9 @@ When the map is updated
 
 The original heuristic was not good. Spaces from the goal doesn't work because the robot can move up to three spaces for
 the same cost as one space. The new heuristic should be based on the fact that the robot can move three spaces in a turn.
+
+
+https://en.wikipedia.org/wiki/Maze_solving_algorithm
+
+Random mouse algorithm is similar to RandomPlanner
+Wall follower won't work because the goal is in the middle surrounded by passages
