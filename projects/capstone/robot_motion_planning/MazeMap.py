@@ -127,36 +127,6 @@ class MazeMap(object):
                 walls.append(map(int,line.split(',')))
             wall_vals = np.array(walls)
 
-        # # Perform validation on maze
-        # # Maze dimensions
-        # if self.dim % 2:
-        #     raise Exception('Maze dimensions must be even in length!')
-        # if wall_vals.shape != (self.dim, self.dim):
-        #     raise Exception('Maze shape does not match dimension attribute!')
-        #
-        # # Wall permeability
-        # wall_errors = []
-        # # vertical walls
-        # for x in range(self.dim-1):
-        #     for y in range(self.dim):
-        #         if (wall_vals[x,y] & 2 != 0) != (wall_vals[x+1,y] & 8 != 0):
-        #             wall_errors.append([(x,y), 'v'])
-        # # horizontal walls
-        # for y in range(self.dim-1):
-        #     for x in range(self.dim):
-        #         if (wall_vals[x,y] & 1 != 0) != (wall_vals[x,y+1] & 4 != 0):
-        #             wall_errors.append([(x,y), 'h'])
-        #
-        # if wall_errors:
-        #     for cell, wall_type in wall_errors:
-        #         if wall_type == 'v':
-        #             cell2 = (cell[0]+1, cell[1])
-        #             print 'Inconsistent vertical wall betweeen {} and {}'.format(cell, cell2)
-        #         else:
-        #             cell2 = (cell[0], cell[1]+1)
-        #             print 'Inconsistent horizontal wall betweeen {} and {}'.format(cell, cell2)
-        #     raise Exception('Consistency errors found in wall specifications!')
-
         for x in range(self.dim):
             for y in range(self.dim):
                 pos = Position(x, y)

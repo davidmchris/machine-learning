@@ -3,22 +3,26 @@ from Planner import Planner
 from PriorityQueue import PriorityQueue
 from Position import Position
 from Direction import Direction
+from MazeHeuristic import MazeHeuristic
 
 
 class AStarPlanner(Planner):
-    def __init__(self, maze_map):
+    def __init__(self, maze_map, heuristic):
         """
         Initializer for this class
         :type maze_map: MazeMap
         :param maze_map: The maze map stores and updates information about the maze.
+        :type heuristic: MazeHeuristic
         """
         super(AStarPlanner, self).__init__(maze_map)
         self.maze_dim = maze_map.dim
         self.policy = []  # list of tuples of moves
+        self.heuristic = heuristic
 
     def next_move(self, location, heading):
+        super(AStarPlanner, self).next_move(location, heading)
         if len(self.policy) == 0:
-            return "Reset", "Reset"
+            return None
         return self.policy.pop()
 
     def go_back(self, end_state, move):
@@ -38,27 +42,6 @@ class AStarPlanner(Planner):
         for i in range(abs(movement)):
             start_location = start_location.add(direction_of_movement)
         return start_location, start_heading
-
-    # def get_heuristic_value(self, state):
-    #     location = state[0]
-    #     if self.maze_map.at_goal(location):
-    #         return 0
-    #     x_dist_to_goal = min(abs(self.maze_dim / 2 - location.x), abs(location.x - self.maze_dim / 2 + 1))
-    #     y_dist_to_goal = min(abs(self.maze_dim / 2 - location.y), abs(location.y - self.maze_dim / 2 + 1))
-    #     x_timesteps_to_goal = 0 if x_dist_to_goal == 0 else (x_dist_to_goal - 1) + 1
-    #     y_timesteps_to_goal = 0 if y_dist_to_goal == 0 else (y_dist_to_goal - 1) + 1
-    #     return x_timesteps_to_goal + y_timesteps_to_goal
-    def get_heuristic_value(self, state):
-        location = state[0]
-        if self.maze_map.at_goal(location):
-            return 0
-        x_dist_to_goal = min(abs(self.maze_dim / 2 - location.x), abs(location.x - self.maze_dim / 2 + 1))
-        y_dist_to_goal = min(abs(self.maze_dim / 2 - location.y), abs(location.y - self.maze_dim / 2 + 1))
-        x_timesteps_to_goal = 0 if x_dist_to_goal == 0 else (x_dist_to_goal - 1) / 3 + 1
-        y_timesteps_to_goal = 0 if y_dist_to_goal == 0 else (y_dist_to_goal - 1) / 3 + 1
-        return x_timesteps_to_goal + y_timesteps_to_goal
-    # def get_heuristic_value(self, state):
-    #     return 0
 
     def get_cost(self, move):
         """
@@ -80,7 +63,7 @@ class AStarPlanner(Planner):
 
         initial_state = (location, heading)
         g = 0
-        h = self.get_heuristic_value(initial_state)
+        h = self.heuristic.get_value(initial_state)
         f = g + h
         open_nodes.insert(f, initial_state)
         came_from[initial_state] = (g, None, None)
@@ -91,17 +74,17 @@ class AStarPlanner(Planner):
 
             closed_nodes.add(current_state)
 
-            if self.maze_map.at_goal(current_state[0]):
+            if self.heuristic.get_value(current_state) == 0:
                 pol = self.create_policy(current_state, initial_state, came_from)
                 return self.policy
 
-            moves = self.get_possible_moves(current_state[0], current_state[1])
+            moves = self.get_possible_moves(current_state)
             for move in moves:
                 new_state = self.get_move_result(current_state, move)
                 if new_state in closed_nodes:
                     continue
                 g = came_from[current_state][0] + self.get_cost(move)
-                h = self.get_heuristic_value(new_state)
+                h = self.heuristic.get_value(new_state)
                 f = g + h
                 if new_state not in open_nodes:
                     open_nodes.insert(f, new_state)
@@ -125,18 +108,3 @@ class AStarPlanner(Planner):
             self.policy.append(move)
             current_state = came_from[current_state][2]
         return self.policy
-
-    def display_heuristic(self):
-        heuristic = []
-        for i in range(self.maze_dim):
-            row = []
-            for j in range(self.maze_dim):
-                pos = Position(i, j)
-                head = Direction(0)
-                state = (pos, head)
-                h = self.get_heuristic_value(state)
-                row.append(h)
-            heuristic.append(row)
-
-        for i in heuristic:
-            print i

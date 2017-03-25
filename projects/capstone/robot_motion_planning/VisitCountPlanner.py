@@ -9,11 +9,9 @@ class VisitCountPlanner(Planner):
         """
         super(VisitCountPlanner, self).__init__(maze_map)
         self.maze_map = maze_map
-        self.visits = [[0 for j in range(maze_map.dim)] for i in range(maze_map.dim)]
 
     def next_move(self, location, heading):
-        self.visits[location.x][location.y] += 1
-        print "({}, {}) visit_count = {}".format(location.x, location.y, self.visits[location.x][location.y])
+        super(VisitCountPlanner, self).next_move(location, heading)
         current_state = (location, heading)
         moves = self.get_possible_moves(current_state)
         lowest_visits = 1000

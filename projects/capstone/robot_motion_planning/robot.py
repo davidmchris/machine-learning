@@ -1,12 +1,7 @@
-from maze import Maze
-from Visualizer import Visualizer
-from RandomPlanner import RandomPlanner
-from AStarPlanner import  AStarPlanner
-from VisitCountPlanner import VisitCountPlanner
-from MazeMap import MazeMap
-from Direction import Direction
-from Position import Position
-import os
+from RandomController import RandomController
+from PureAStarController import PureAStarController
+from VisitCountController import VisitCountController
+from AStarReturnController import AStarReturnController
 
 class Robot(object):
     def __init__(self, maze_dim):
@@ -16,15 +11,10 @@ class Robot(object):
         provided based on common information, including the size of the maze
         the robot is placed in.
         '''
-
-        self.location = Position(0, 0)
-        self.heading = Direction(0)
-        self.maze_map = MazeMap(maze_dim)
-        # self.planner = RandomPlanner(self.maze_map)
-        # self.planner = AStarPlanner(self.maze_map)
-        self.planner = VisitCountPlanner(self.maze_map)
-        self.planner.replan(self.location, self.heading)
-        self.count = 0
+        # self.controller = RandomController(maze_dim)
+        # self.controller = PureAStarController(maze_dim)
+        # self.controller = VisitCountController(maze_dim)
+        self.controller = AStarReturnController(maze_dim)
 
     def next_move(self, sensors):
         '''
@@ -47,36 +37,5 @@ class Robot(object):
         the maze) then returning the tuple ('Reset', 'Reset') will indicate to
         the tester to end the run and return the robot to the start.
         '''
-        self.count += 1
-        maze_updated = self.maze_map.update(self.location, self.heading, sensors)  # update state
-        self.maze_map.dump_to_file(os.path.join(os.curdir, "known_maze.txt"))
-        if maze_updated:
-            self.planner.replan(self.location, self.heading)
-        rotation, movement = self.planner.next_move(self.location, self.heading)  # choose next action
-        # Assumption: The planner will not choose a value that will run into a wall
-        if self.count == 1000:
-            self.planner.print_visits()
-        if rotation == "Reset" and movement == "Reset":
-            self.reset()
-        else:
-            self.move(rotation, movement)
+        return self.controller.next_move(sensors)
 
-        return rotation, movement
-
-    def move(self, rotation, movement):
-        self.heading = self.heading.rotate(rotation)
-        direction_of_movement = self.heading if movement > 0 else self.heading.flip()
-        for i in range(abs(movement)):
-            self.location = self.location.add(direction_of_movement)
-
-    def reset(self):
-        self.location = Position(0, 0)
-        self.heading = Direction(0)
-        #self.planner.replan(self.location, self.heading)
-        #self.show_current_policy_and_map()
-
-    # def show_current_policy_and_map(self):
-    #     vis = Visualizer(self.maze_map.dim)
-    #     vis.draw_maze(Maze('known_maze.txt'))
-    #     vis.draw_policy(reversed(self.planner.policy), self.location, self.heading)
-    #     vis.show_window()
