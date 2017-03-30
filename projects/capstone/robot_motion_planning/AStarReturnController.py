@@ -4,11 +4,12 @@ from GoalHeuristic import GoalHeuristic
 from BackToStartHeuristic import BackToStartHeuristic
 from Position import Position
 
+
 class AStarReturnController(RobotController):
     """
-    This controller chooses random moves always. If it reaches the goal, it immediately resets since there is nothing
-    to gain by exploring more of the maze.
+    This controller goes back and forth between the start and goal until it reaches the goal without having to replan.
     """
+
     def __init__(self, maze_dim):
         """
         :type maze_dim: int
@@ -18,22 +19,31 @@ class AStarReturnController(RobotController):
         self.back_heuristic = BackToStartHeuristic(maze_dim)
         self.planner = AStarPlanner(self.maze_map, self.goal_heuristic)
         self.planner.replan(self.location, self.heading)
+        self.replanned = False
 
     def next_move(self, sensors):
         """
         :param sensors: The distances in number of cells from the left, front, and right walls
         :type sensors: (int, int, int)
         """
-        self.update(sensors)
-        if self.maze_map.at_goal(self.location) and self.planner.heuristic != self.back_heuristic:
-            self.planner.heuristic = self.back_heuristic
-            self.planner.replan(self.location, self.heading)
-            self.found_goal = True
-
-        if self.found_goal and self.location == Position(0,0) and self.run_number != 1:
-            self.planner.heuristic = self.goal_heuristic
-            return self.reset()
+        maze_updated = self.update(sensors)
+        if self.planner.heuristic == self.goal_heuristic:
+            if self.maze_map.at_goal(self.location):
+                if not self.replanned:
+                    return self.reset()
+                else:
+                    self.planner.heuristic = self.back_heuristic
+                    self.planner.replan(self.location, self.heading)
+                    self.found_goal = True
+            elif maze_updated:
+                self.replanned = True
+                self.planner.replan(self.location, self.heading)
         else:
-            rotation, movement = self.planner.next_move(self.location, self.heading)
-            self.move(rotation, movement)
-            return rotation, movement
+            if self.location == Position(0, 0) and self.run_number != 1:
+                self.planner.heuristic = self.goal_heuristic
+                self.planner.replan(self.location, self.heading)
+                self.replanned = False
+
+        rotation, movement = self.planner.next_move(self.location, self.heading)
+        self.move(rotation, movement)
+        return rotation, movement

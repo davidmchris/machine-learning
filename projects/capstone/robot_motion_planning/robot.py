@@ -3,6 +3,7 @@ from PureAStarController import PureAStarController
 from VisitCountController import VisitCountController
 from AStarReturnController import AStarReturnController
 
+
 class Robot(object):
     def __init__(self, maze_dim):
         '''

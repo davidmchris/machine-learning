@@ -37,7 +37,7 @@ class RobotController(object):
         Convenience function for updating the maze, re-planning (if the maze was updated), and dumping the maze for
         debugging.
         :param sensors:
-        :return:
+        :return: True if maze was updated
         """
         self.timestep += 1
         maze_updated = self.maze_map.update(self.location, self.heading, sensors)
@@ -45,6 +45,7 @@ class RobotController(object):
             self.planner.replan(self.location, self.heading)
         if self.dump_mazes:
             self.maze_map.dump_to_file(os.path.join(os.curdir, "known_maze.txt"))
+        return maze_updated
 
     def move(self, rotation, movement):
         """
