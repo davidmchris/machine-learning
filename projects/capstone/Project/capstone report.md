@@ -52,32 +52,33 @@ Each maze has some characteristics that make it difficult or impossible for some
 
 Shortest paths:
 
-####Maze 1
+#### Maze 1
 
 ![Maze 1](images/maze_1_shortest_path.png )
 
-####Maze 2
+#### Maze 2
 
 ![Maze 2](images/maze_2_shortest_path.png )
 
-####Maze 3
+#### Maze 3
 
 ![Maze 3](images/maze_3_shortest_path.png )
 
 As can be seen in each of these mazes, the shortest path (in terms of number of moves) goes to the outside of the maze. Due to the heuristic, A\* is not ideally suited to explore the outer edges of the maze. For example, here is a visualization of the heuristic value for each cell in maze 1:
 
-4, 4, 3, 3, 3, 2, 2, 3, 3, 3, 4, 4
-4, 4, 3, 3, 3, 2, 2, 3, 3, 3, 4, 4
-3, 3, 2, 2, 2, 1, 1, 2, 2, 2, 3, 3
-3, 3, 2, 2, 2, 1, 1, 2, 2, 2, 3, 3
-3, 3, 2, 2, 2, 1, 1, 2, 2, 2, 3, 3
-2, 2, 1, 1, 1, 0, 0, 1, 1, 1, 2, 2
-2, 2, 1, 1, 1, 0, 0, 1, 1, 1, 2, 2
-3, 3, 2, 2, 2, 1, 1, 2, 2, 2, 3, 3
-3, 3, 2, 2, 2, 1, 1, 2, 2, 2, 3, 3
-3, 3, 2, 2, 2, 1, 1, 2, 2, 2, 3, 3
-4, 4, 3, 3, 3, 2, 2, 3, 3, 3, 4, 4
-4, 4, 3, 3, 3, 2, 2, 3, 3, 3, 4, 4
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
+| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
+| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
+| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
+| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
+| 2| 2| 1| 1| 1| 0| 0| 1| 1| 1| 2| 2|
+| 2| 2| 1| 1| 1| 0| 0| 1| 1| 1| 2| 2|
+| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
+| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
+| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
+| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
+| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
 
 At the goal the heuristic is 0 and the numbers get higher the further away the cell is. This causes the A\* algorithm to want to stay aligned with the goal and as close to it as possible. In maze 1 the shortest path goes around the outside of the maze in the bottom right corner where the heuristic is the highest. The A\* algorithm will not find the shortest path quickly in this circumstance. There is a difference though in how fast the algorithm runs versus how fast the robot finds the goal. Once A\* is done, it has found the shortest path (according to the knowledge it has of the maze). This means it will find the center of the maze quickly.
 
@@ -87,15 +88,15 @@ As Shibuya has shown, the robot must avoid dead ends and loops. The random algor
 
 There are two kinds of algorithms the robot needs to use. The first is for exploration and the second is for seeking the goal. If the robot has explored enough of the maze to have discovered the shortest path in run 1, A\* is the optimal algorithm for using on the second run since it is guaranteed to find the shortest path if it knows the entire maze. I used A\* for each of the algorithms on the second run which makes the exploration algorithms of more interest. In the following sections I will describe each of the exploration algorithms.
 
-####Random algorithm
+#### Random algorithm
 
 The random algorithm simply chooses a move at random from the possible moves. It will not move in any specific direction, avoid loops or dead ends. This algorithm is included only as a benchmark. Any algorithm that is worth using should outperform it.
 
-####Visit count algorithm
+#### Visit count algorithm
 
 This algorithm keeps track how many times it has visited each cell. When it chooses between the possible moves, it will choose the one with the lowest number of visits. This basically provides a gradient which the robot follows down-hill. This pushes the robot away from areas it has already explored. This algorithm is efficient for exploring the maze. It is not directional like A\*, but as long as the algorithm enters the goal at some point, that's fine. The stopping criteria could have a large effect on the final score. Shibuya added a heuristic to break ties for this algorithm and it seems to have worked quite well. 
 
-####A\* Return Algorithm
+#### A\* Return Algorithm
 
 The idea behind this algorithm is that you don't need to explore the entire maze to find the shortest path. Since A\* is guaranteed to find the shortest path, if it goes from the start to the goal enough times, it will discover the shortest path. The mouse first tries to make its way to the goal. When it discovers a new wall, it re-plans the route. Once at the goal, it returns to the start, re-planning when necessary. The first time it makes it all the way to the goal without  seeing any new walls, it will have found the shortest path and the mouse is reset for run 2.
 
@@ -111,7 +112,7 @@ There was no data pre-processing required because the mouse knows nothing about 
 
 ### Implementation
 
-####Controllers
+#### Controllers
 
 I created a base class and 4 sub-classes for controlling the robot:
  - RobotController (the base class)
@@ -120,43 +121,43 @@ I created a base class and 4 sub-classes for controlling the robot:
  - PureAStarController
  - AStarReturnController
  
-#####RobotController
+##### RobotController
 
 The RobotController class is responsible for directing the overall strategy of the robot. The RobotController base class defines the next\_move method which all of the other subclasses must implement. This is the method called by the robot class. It also implements a number of other useful methods that the subclasses can take advantage of. The base class owns the maze map, the location and heading of the robot, and the planner used to get the next move.
 
-#####RandomController
+##### RandomController
 
 This class implements the random mouse algorithm. It chooses the next move from a list of possible moves. The possible moves are the ones that won't run the robot into a wall.
 
-#####VisitCountController
+##### VisitCountController
 
 This class uses two different planners. It uses the VisitCountPlanner during run 1 and the AStarPlanner during run 2. To end the first run the controller must have explored a certain percentage of the maze as well as enter the goal area at some point during the process. Once in run 2, the planner is switched over to the AStarPlanner and the controller tries to make it to the goal as fast as possible.
 
-#####PureAStarController
+##### PureAStarController
 
 This controller uses the AStarPlanner exclusively and is very simple. It just uses A\* to get to the goal as fast as possible for both runs.
 
-####Planners
+#### Planners
 
 I created a Planner base class and three planner sub-classes:
 
-#####Planner
+##### Planner
 
 The Planner is responsible for deciding what the next move should be. This is the base class for the other planners and is used by the different controller classes. It defines a next_move method which is overridden by each of the sub-classes. It also defines the re-plan method which is called whenever the map is updated. It is really only necessary for the AStarPlanner, but is included for convenience. The Planner class also keeps track of the percentage of the maze visited by the robot.
 
-#####RandomPlanner
+##### RandomPlanner
 
 The RandomPlanner just chooses a random move from the list of available moves every time next_move is called.
 
-#####VisitCountPlanner
+##### VisitCountPlanner
 
 The VisitCountPlanner keeps track of the places it has been in the maze and chooses the move that gets it to the square with the least amount of visits.
 
-#####AStarPlanner
+##### AStarPlanner
 
 This is the planner used in run 2 by all controllers. It implements the A\* algorithm. It is initialized with the maze map and a MazeHeuristic class. The MazeHeuristic can be switched out by the AStarReturnController to direct the robot either to the goal or back to the start.
 
-####MazeMap
+#### MazeMap
 
 The MazeMap class is used by the planner classes, the heuristic classes and the controller classes. It keeps track of known walls and can provide a list of possible moves given a location and direction. It is basically a graph where the nodes are positions in the maze and the edges are the junctions between the cells (whether is has a wall or not).
 
@@ -164,7 +165,7 @@ The MazeMap class is used by the planner classes, the heuristic classes and the 
 
 After trying out the PureAStarController, I was unable to get a better score than using the VisitCountPlanner. I started thinking of ways that would improve the exploration. I came to the conclusion that the VisitCountPlanner was hard to beat in terms of efficiently exploring an unknown maze since it will always choose a cell it hasn't been to over a cell it has been to. Once I realized that I actually don't want to explore the whole maze, I made a breakthrough. The only part of the maze that I actually want to explore is the shortest path. The A\* algorithm is guaranteed to get the shortest path given an admissible heuristic (one that does not over estimate the number of moves to the goal). It makes sense then, that if you were to send the robot back and forth between the goal and the start square, it would learn the shortest path eventually without exploring the entire maze. That's where the idea for the AStarReturnController came from.
 
-#####AStarReturnController
+##### AStarReturnController
 
 Similar to the PureAStarController, this controller exclusively uses A\*, but instead of resetting after hitting the goal, it changes the heuristic in the A\* planner to get back to the start square at (0,0). When it reaches the start square, it switches the heuristic back to get back to the goal. It will go back and forth between the start square and the goal until it no longer has to re-plan on the way to the goal. At this point it has found the optimal path since if there was a better path in an unexplored part of the maze (which has no walls as far as A\* is concerned) it would go towards the unexplored part of the maze, discover new walls, and have to re-plan. On the second run, it just goes to the goal as fast as possible using A\* since it has found the optmal path.
 
@@ -172,11 +173,11 @@ Similar to the PureAStarController, this controller exclusively uses A\*, but in
 
 ### Model Evaluation and Validation
 
-####RandomController
+#### RandomController
 
 since the random controller will traverse a different path every time, I ran the controller multiple times on each maze and found the median result because the median is a more robust measure of central tendency and there is no way to compute a mean with NA entries. Here are the results:
 
-#####Maze 1
+##### Maze 1
 
 | Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -197,7 +198,7 @@ since the random controller will traverse a different path every time, I ran the
 | 15 | 432 | 22 | 36.400 | 0.613 |
 | Median | 511 | 23 | 40.033 | 0.568
 
-#####Maze 2
+##### Maze 2
 
 | Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -218,7 +219,7 @@ since the random controller will traverse a different path every time, I ran the
 | 15 | 738 | 30 | 54.600 | 0.465 |
 | Median | 544 | 36 | 53.467 | 0.577 |
 
-#####Maze 3
+##### Maze 3
 
 | Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -239,7 +240,7 @@ since the random controller will traverse a different path every time, I ran the
 | 15 | 481 | 39 | 55.033 | 0.798 |
 | Median | 513 | 44.5 | 64.9665 | 0.6965
 
-####VisitCountController
+#### VisitCountController
 
 | Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -247,11 +248,11 @@ since the random controller will traverse a different path every time, I ran the
 | 2 | 226 | 24 | 31.533 | 1.726 |
 | 3 | 303 | 44 | 54.100 | 1.647 |
 
-####PureAStarController
+#### PureAStarController
 
 | Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 
-####PureAStarController
+#### PureAStarController
 
 | Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -259,7 +260,7 @@ since the random controller will traverse a different path every time, I ran the
 | 2 | 70 | 43 | 45.333 | 3.543 |
 | 3 | 47 | 55 | 56.567 | 4.723 |
 
-####AStarReturnController
+#### AStarReturnController
 
 | Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -269,7 +270,7 @@ since the random controller will traverse a different path every time, I ran the
 
 ### Justification
 
-####Maze 1
+#### Maze 1
 
 | Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -280,7 +281,7 @@ since the random controller will traverse a different path every time, I ran the
 
 As can be seen in the results for maze 1, the random controller was the worst performer in terms of score as expected. The A\* return controller was the best, but was very close to the visit count controller. The pure A\* controller also worked well, but not as well as the VisitCount and AStarReturn controllers. One interesting thing to note is the efficiency number. The pure A\* controller was by far the best performer in terms of exploration efficiency. The reason for this is probably that it is less focused on exploration than the other controllers which is counter-intuitive at first. Since it is less focused on exploration, it has far fewer timesteps than the other three. Since efficiency is j / N1 (where j is number of known cell junctions (walls or non-walls) and N1 is the number of timesteps in the first run), decreasing N1 or increasing j will improve the efficiency score. The pure A\* controller has the lowest N1 by far which explains the impressive efficiency value.
 
-####Maze 2
+#### Maze 2
 
 | Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
@@ -291,7 +292,7 @@ As can be seen in the results for maze 1, the random controller was the worst pe
 
 For maze 2, the controllers rank in the same order as before, but with the bigger maze the differences between them are more pronounced. The A\* return controller was again the best performer, but not by a wide margin. The pure A\* controller on the other hand did much worse with a larger maze and was cloer to the random controller than the other two. This is likely due to the lack of exploration. Since it explores very little of the maze in the first run, it ends up doing more exploration in the second run when it is 30 times more costly.
 
-####Maze 3
+#### Maze 3
 
 | Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
