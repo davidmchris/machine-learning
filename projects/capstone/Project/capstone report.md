@@ -66,19 +66,18 @@ Shortest paths:
 
 As can be seen in each of these mazes, the shortest path (in terms of number of moves) goes to the outside of the maze. Due to the heuristic, A\* is not ideally suited to explore the outer edges of the maze. For example, here is a visualization of the heuristic value for each cell in maze 1:
 
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
-| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
-| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
-| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
-| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
-| 2| 2| 1| 1| 1| 0| 0| 1| 1| 1| 2| 2|
-| 2| 2| 1| 1| 1| 0| 0| 1| 1| 1| 2| 2|
-| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
-| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
-| 3| 3| 2| 2| 2| 1| 1| 2| 2| 2| 3| 3|
-| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
-| 4| 4| 3| 3| 3| 2| 2| 3| 3| 3| 4| 4|
+4 4 3 3 3 2 2 3 3 3 4 4  
+4 4 3 3 3 2 2 3 3 3 4 4  
+3 3 2 2 2 1 1 2 2 2 3 3  
+3 3 2 2 2 1 1 2 2 2 3 3  
+3 3 2 2 2 1 1 2 2 2 3 3  
+2 2 1 1 1 0 0 1 1 1 2 2  
+2 2 1 1 1 0 0 1 1 1 2 2  
+3 3 2 2 2 1 1 2 2 2 3 3  
+3 3 2 2 2 1 1 2 2 2 3 3  
+3 3 2 2 2 1 1 2 2 2 3 3  
+4 4 3 3 3 2 2 3 3 3 4 4  
+4 4 3 3 3 2 2 3 3 3 4 4  
 
 At the goal the heuristic is 0 and the numbers get higher the further away the cell is. This causes the A\* algorithm to want to stay aligned with the goal and as close to it as possible. In maze 1 the shortest path goes around the outside of the maze in the bottom right corner where the heuristic is the highest. The A\* algorithm will not find the shortest path quickly in this circumstance. There is a difference though in how fast the algorithm runs versus how fast the robot finds the goal. Once A\* is done, it has found the shortest path (according to the knowledge it has of the maze). This means it will find the center of the maze quickly.
 
