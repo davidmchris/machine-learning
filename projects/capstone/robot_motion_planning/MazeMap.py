@@ -135,4 +135,15 @@ class MazeMap(object):
                 self.cells[pos].walls[s].is_wall = (wall_vals[x,y] & 4) == 0
                 self.cells[pos].walls[w].is_wall = (wall_vals[x,y] & 8) == 0
 
+    def get_num_known_walls(self):
+        walls = set()
+        for cell in self.cells.itervalues():
+            for wall in cell.walls.itervalues():
+                if wall not in walls:
+                    walls.add(wall)
 
+        num_known_walls = 0
+        for wall in walls:
+            if wall.is_wall is not None:
+                num_known_walls += 1
+        return num_known_walls

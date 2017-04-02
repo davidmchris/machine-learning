@@ -15,6 +15,7 @@ class VisitCountController(RobotController):
         """
         super(VisitCountController, self).__init__(maze_dim)
         self.planner = VisitCountPlanner(self.maze_map)
+        print "Using VisitCountController"
 
     def next_move(self, sensors):
         """
@@ -22,7 +23,7 @@ class VisitCountController(RobotController):
         :type sensors: (int, int, int)
         """
         self.update(sensors)
-        if self.planner.percent_coverage() > .8 and self.found_goal:
+        if self.planner.percent_coverage() > .99 and self.found_goal:
             self.planner = AStarPlanner(self.maze_map, GoalHeuristic(self.maze_map.dim))
             return self.reset()
         else:

@@ -73,6 +73,8 @@ class RobotController(object):
         self.location = Position(0, 0)
         self.heading = Direction(0)
         self.run_number = 1
+        print "Number of moves in first run: {}".format(self.timestep)
+        print "Exploration efficiency: {}".format(self.get_exploration_efficiency())
         self.planner.replan(self.location, self.heading)
         return "Reset", "Reset"
 
@@ -85,3 +87,6 @@ class RobotController(object):
         vis.draw_maze(Maze('known_maze.txt'))
         vis.draw_policy(reversed(self.planner.policy), self.location, self.heading)
         vis.show_window()
+
+    def get_exploration_efficiency(self):
+        return self.maze_map.get_num_known_walls() / float(self.timestep)

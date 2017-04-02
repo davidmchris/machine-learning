@@ -1,25 +1,16 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
-David Christensen  
-January 17th, 2017
+David Christensen
+April 1st, 2017
 
 ## I. Definition
-_(approx. 1-2 pages)_
 
 ### Project Overview
-In this section, look to provide a high-level overview of the project in layman’s terms. Questions to ask yourself when writing this section:
-- _Has an overview of the project been provided, such as the problem domain, project origin, and related datasets or input data?_
-- _Has enough background information been given so that an uninformed reader would understand the problem domain and following problem statement?_
-
-Micromouse competitions have been around since the late 1970's. In the competition, a robot mouse solves a 16x16 maze. The mouse gets two runs, the first to explore the maze and the second to find it's way to the goal in the center of the maze. The mice are ranked based on how much time they use in the first and second runs. 
+Micromouse competitions have been around since the late 1970's. In the competition, a robot mouse solves a 16x16 maze. The mouse gets two runs, the first to explore the maze and the second to find it's way to the goal in the center of the maze. The mice are ranked based on how much time they use in the first and second runs.
 
 While the real micromouse competitions use physical robot mice, this project just simulates the maze and movement of the mouse in discrete timesteps. Each maze is a virtual grid. It is stored in a text file that defines where the walls are. The mazes range from 12x12 to 16x16.
 
 ### Problem Statement
-In this section, you will want to clearly define the problem that you are trying to solve, including the strategy (outline of tasks) you will use to achieve the desired solution. You should also thoroughly discuss what the intended solution will be for this problem. Questions to ask yourself when writing this section:
-- _Is the problem statement clearly defined? Will the reader understand what you are expecting to solve?_
-- _Have you thoroughly discussed how you will attempt to solve the problem?_
-- _Is an anticipated solution clearly defined? Will the reader understand what results you are looking for?_
 
 Like the real competitions, the mouse gets two runs, the first to explore the maze and the second to get to the center as fast as possible.
 
@@ -30,50 +21,34 @@ The purpose of the first run is to explore the maze. In Naoki Shibuya's capstone
  - Visit count with heuristic
  For more information see [his paper](https://github.com/udacity/machine-learning/blob/master/projects/capstone/report-example-3.pdf).
  
- I will use the random and visit count methods to do my exploration as well as trying A\*. A\* is normally used to find the shortest path to the goal when the maze is already known. My algorithm uses A\* to reach the goal by replanning every time something new is learned like Stanley, the car that won the DARPA challenge for self driving cars. It then switches the heuristic to go back to the start. Once it reaches the start, it goes back towards the goal again. It continues in this way until it traverses the same path to the goal twice. This should be the shortest path.
+ I will use the random and visit count methods to do my exploration as well as trying A\*. A\* is normally used to find the shortest path to the goal when the maze is already known. My algorithm uses A\* to reach the goal by re-planning every time something new is learned like Stanley, the car that won the DARPA challenge for self driving cars. It then switches the heuristic to go back to the start. Once it reaches the start, it goes back towards the goal again. It continues in this way until it traverses the same path to the goal twice. This should be the shortest path.
  
  The greater the maze coverage that the robot can get in the first run, the more likely it is to find the shortest path in the second run. Since the moves in the second run are 30 times more expensive than the moves in the first run, it makes sense to use 30 more moves during run 1 to decrease the shortest path by one move during run 2.
 
 The purpose of the second run is to get to the goal as fast as possible. While there are multiple ways to find the path to the goal of a maze, A\* will find the shortest path efficiently. If the whole maze is not explored, the algorithm will have to be re-run every time something new is seen just like in the exploration phase. I use A\* in the second run for all of my controllers.
 
-I expect that the visit count with heuristic controller will be the most consistently best performer, but I expect the A\* return algorithm to work better on some mazes.
-
+I expect that the visit count controller will be the most consistently best performer, but I expect the A\* return algorithm to work better on some mazes.
 
 ### Metrics
-In this section, you will need to clearly define the metrics or calculations you will use to measure performance of a model or result in your project. These calculations and metrics should be justified based on the characteristics of the problem and problem domain. Questions to ask yourself when writing this section:
-- _Are the metrics you’ve chosen to measure the performance of your models clearly discussed and defined?_
-- _Have you provided reasonable justification for the metrics chosen based on the problem and solution?_
 
 These are the metrics I have defined for evaluating my algorithms:
 
  - N1: Number of moves in the first run
  - N2: Number of moves in the second run
  - Mouse score: N2 + N1/30
- - Exploration efficiency: (j / j\_total) / N1 where j is number of known maze cell junctions and j\_total is the total number of cell junctions in the maze.
- 
- N1 will give an idea of how many moves 
+ - Exploration Efficiency: j / N1 where j is number of known maze cell junctions (walls or not walls)
 
 ## II. Analysis
-_(approx. 2-4 pages)_
 
 ### Data Exploration
-In this section, you will be expected to analyze the data you are using for the problem. This data can either be in the form of a dataset (or datasets), input data (or input files), or even an environment. The type of data should be thoroughly described and, if possible, have basic statistics and information presented (such as discussion of input features or defining characteristics about the input or environment). Any abnormalities or interesting qualities about the data that may need to be addressed have been identified (such as features that need to be transformed or the possibility of outliers). Questions to ask yourself when writing this section:
-- _If a dataset is present for this problem, have you thoroughly discussed certain features about the dataset? Has a data sample been provided to the reader?_
-- _If a dataset is present for this problem, are statistics about the dataset calculated and reported? Have any relevant results from this calculation been discussed?_
-- _If a dataset is **not** present for this problem, has discussion been made about the input space or input data for your problem?_
-- _Are there any abnormalities or characteristics about the input space or dataset that need to be addressed? (categorical variables, missing values, outliers, etc.)_
 
 The mazes are defined by input files which have 4-bit integers where the bits represent which sides of each square have walls. The mouse can occupy one square at a time and moves in discrete jumps. The mouse cannot move through walls. The center of the maze is a 2x2 goal area. After the mouse reaches the goal on the first run, it can keep exploring or choose to end the run. The mouse starts both runs in the bottom left corner, facing up. The starting square has walls on three sides with the open side facing up. There is a wall running around the outside of the maze blocking the mouse from leaving.
 
 Some of the first questions I had when starting this project was why the mouse doesn't have a back sensor and why the tester does not provide the location of the robot in the next_move method. After thinking it through, the mouse does not need a back sensor since it is known the mouse starts at 0,0 with walls on three sides. Since the mouse first rotates, then moves, it will see any square using its sensors before it gets there. The tester does not provide the location of the robot because robots in the real world have to perform localization. Due to the discrete nature of the simulation and the exact movements, there will never be any doubt about where the robot is as long as it doesn't make a move that would crash it into a wall.
 
-Each maze has some charactersitics that make it difficult or impossible for some maze solving algorithms to work. For example, in all three test mazes the goal walls are not connected to the outer walls of the maze. This would prevent a wall-following algorithm from finding the goal.
+Each maze has some characteristics that make it difficult or impossible for some maze solving algorithms to work. For example, in all three test mazes the goal walls are not connected to the outer walls of the maze. This would prevent a wall-following algorithm from finding the goal.
 
 ### Exploratory Visualization
-In this section, you will need to provide some form of visualization that summarizes or extracts a relevant characteristic or feature about the data. The visualization should adequately support the data being used. Discuss why this visualization was chosen and how it is relevant. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant characteristic or feature about the dataset or input data?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
 
 Shortest paths:
 
@@ -99,17 +74,13 @@ As can be seen in each of these mazes, the shortest path (in terms of number of 
 4, 4, 3, 3, 3, 2, 2, 3, 3, 3, 4, 4
 4, 4, 3, 3, 3, 2, 2, 3, 3, 3, 4, 4
 
-At the goal the heuristic is 0 and the numbers get higher the further away the cell is. This causes the A* algorithm to want to stay aligned with the goal and as close to it as possible. In maze 1 the shortest path goes around the outside of the maze in the bottom right corner where the heuristic is the highest. The A\* algorithm will not find the shortest path quickly in this circumstance. There is a difference though in how fast the algorithm runs versus how fast the robot finds the goal. Once A\* is done, it has found the shortest path (according to the knowledge it has of the maze). This means it will find the center of the maze quickly.
+At the goal the heuristic is 0 and the numbers get higher the further away the cell is. This causes the A\* algorithm to want to stay aligned with the goal and as close to it as possible. In maze 1 the shortest path goes around the outside of the maze in the bottom right corner where the heuristic is the highest. The A\* algorithm will not find the shortest path quickly in this circumstance. There is a difference though in how fast the algorithm runs versus how fast the robot finds the goal. Once A\* is done, it has found the shortest path (according to the knowledge it has of the maze). This means it will find the center of the maze quickly.
 
-As Shibuya has shown, the robot must avoid dead ends and loops. The random algorithm will not avoid them and A* and the visit count both will avoid them as soon as they are known.
+As Shibuya has shown, the robot must avoid dead ends and loops. The random algorithm will not avoid them and A\* and the visit count both will avoid them as soon as they are known.
 
 ### Algorithms and Techniques
-In this section, you will need to discuss the algorithms and techniques you intend to use for solving the problem. You should justify the use of each one based on the characteristics of the problem and the problem domain. Questions to ask yourself when writing this section:
-- _Are the algorithms you will use, including any default variables/parameters in the project clearly defined?_
-- _Are the techniques to be used thoroughly discussed and justified?_
-- _Is it made clear how the input data or datasets will be handled by the algorithms and techniques chosen?_
 
-There are two kinds of algorithms the robot needs to use. The first is for exploration and the second is for seeking the goal. If the robot has explored enough of the maze to have discovered the shortest path in run 1, A* is the optimal algorithm for using on the second run since it is guaranteed to find the shortest path. I used A* for each of the algorithms on the second run which makes the exploration algorithms of more interest. In the following sections I will describe each of the exploration algorithms.
+There are two kinds of algorithms the robot needs to use. The first is for exploration and the second is for seeking the goal. If the robot has explored enough of the maze to have discovered the shortest path in run 1, A\* is the optimal algorithm for using on the second run since it is guaranteed to find the shortest path if it knows the entire maze. I used A\* for each of the algorithms on the second run which makes the exploration algorithms of more interest. In the following sections I will describe each of the exploration algorithms.
 
 ####Random algorithm
 The random algorithm simply chooses a move at random from the possible moves. It will not move in any specific direction, avoid loops or dead ends. This algorithm is included only as a benchmark. Any algorithm that is worth using should outperform it.
@@ -121,23 +92,15 @@ This algorithm keeps track how many times it has visited each cell. When it choo
 The idea behind this algorithm is that you don't need to explore the entire maze to find the shortest path. Since A\* is guaranteed to find the shortest path, if it goes from the start to the goal enough times, it will discover the shortest path. The mouse first tries to make its way to the goal. When it discovers a new wall, it re-plans the route. Once at the goal, it returns to the start, re-planning when necessary. The first time it makes it all the way to the goal without  seeing any new walls, it will have found the shortest path and the mouse is reset for run 2.
 
 ### Benchmark
-In this section, you will need to provide a clearly defined benchmark result or threshold for comparing across performances obtained by your solution. The reasoning behind the benchmark (in the case where it is not an established result) should be discussed. Questions to ask yourself when writing this section:
-- _Has some result or value been provided that acts as a benchmark for measuring performance?_
-- _Is it clear how this result or value was obtained (whether by data or by hypothesis)?_
 
 The benchmark for the different algorithms is the random algorithm. I will be comparing results for the other algorithms against this one.
 
 ## III. Methodology
-_(approx. 3-5 pages)_
 
-### Data Preprocessing
+### Data Pre-processing
 There was no data pre-processing required because the mouse knows nothing about the maze in the beginning.
 
 ### Implementation
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
 
 ####Controllers
 I created a base class and 4 sub-classes for controlling the robot:
@@ -163,7 +126,7 @@ This controller uses the AStarPlanner exclusively and is very simple. It just us
 I created a Planner base class and three planner sub-classes:
 
 #####Planner
-The Planner is responsible for deciding what the next move should be. This is the base class for the other planners and is used by the different controller classes. It defines a next_move method which is overridden by each of the sub-classes. It also defines the replan method which is called whenever the map is updated. It is really only necessary for the AStarPlanner, but is included for convenience. The Planner class also keeps track of the percentage of the maze visited by the robot.
+The Planner is responsible for deciding what the next move should be. This is the base class for the other planners and is used by the different controller classes. It defines a next_move method which is overridden by each of the sub-classes. It also defines the re-plan method which is called whenever the map is updated. It is really only necessary for the AStarPlanner, but is included for convenience. The Planner class also keeps track of the percentage of the maze visited by the robot.
 
 #####RandomPlanner
 The RandomPlanner just chooses a random move from the list of available moves every time next_move is called.
@@ -172,7 +135,7 @@ The RandomPlanner just chooses a random move from the list of available moves ev
 The VisitCountPlanner keeps track of the places it has been in the maze and chooses the move that gets it to the square with the least amount of visits.
 
 #####AStarPlanner
-This is the planner used in run 2 by all controllers. It implements the A* algorithm. It is initialized with the maze map and a MazeHeuristic class. The MazeHeuristic can be switched out by the AStarReturnController to direct the robot either to the goal or back to the start.
+This is the planner used in run 2 by all controllers. It implements the A\* algorithm. It is initialized with the maze map and a MazeHeuristic class. The MazeHeuristic can be switched out by the AStarReturnController to direct the robot either to the goal or back to the start.
 
 ####The maze map
 The MazeMap class is used by the planner classes, the heuristic classes and the controller classes. It keeps track of known walls and can provide a list of possible moves given a location and direction. It is basically a graph where the nodes are positions in the maze and the edges are the junctions between the cells (whether is has a wall or not).
@@ -183,66 +146,148 @@ In this section, you will need to discuss the process of improvement you made up
 - _Is the process of improvement clearly documented, such as what techniques were used?_
 - _Are intermediate and final solutions clearly reported as the process is improved?_
 
-After trying out the PureAStarController, I was unable to get a better score than using the VisitCountPlanner. I started thinking of ways that would improve the exploration. I came to the conclusion that the VisitCountPlanner was hard to beat in terms of efficiently exploring an unknown maze since it will always choose a cell it hasn't been to over a cell it has been to. Once I realized that I actually don't want to explore the whole maze, I made a breakthrough. The only part of the maze that I actually want to explore is the shortest path. The A* algorithm is guranteed to get the shortest path given an admissible heuristic (one that does not over estimate the number of moves to the goal). It makes sense then, that if you were to send the robot back and forth between the goal and the start square, it would learn the shortest path eventually without exploring the entire maze. That's where the idea for the AStarReturnController came from.
+After trying out the PureAStarController, I was unable to get a better score than using the VisitCountPlanner. I started thinking of ways that would improve the exploration. I came to the conclusion that the VisitCountPlanner was hard to beat in terms of efficiently exploring an unknown maze since it will always choose a cell it hasn't been to over a cell it has been to. Once I realized that I actually don't want to explore the whole maze, I made a breakthrough. The only part of the maze that I actually want to explore is the shortest path. The A\* algorithm is guaranteed to get the shortest path given an admissible heuristic (one that does not over estimate the number of moves to the goal). It makes sense then, that if you were to send the robot back and forth between the goal and the start square, it would learn the shortest path eventually without exploring the entire maze. That's where the idea for the AStarReturnController came from.
 
 #####AStarReturnController
-Similar to the PureAStarController, this controller exclusively uses A*, but instead of resetting after hitting the goal, it changes the heuristic in the A* planner to get back to the start square at (0,0). When it reaches the start square, it switches the heuristic back to get back to the goal. It will go back and forth between the start square and the goal until it no longer has to replan on the way to the goal. At this point it has found the optimal path since if there was a better path in an unexplored part of the maze (which has no walls as far as A* is concerned) it would go towards the unexplored part of the maze, discover new walls, and have to replan. On the second run, it just goes to the goal as fast as possible using A* since it has found the optmal path.
+Similar to the PureAStarController, this controller exclusively uses A\*, but instead of resetting after hitting the goal, it changes the heuristic in the A\* planner to get back to the start square at (0,0). When it reaches the start square, it switches the heuristic back to get back to the goal. It will go back and forth between the start square and the goal until it no longer has to re-plan on the way to the goal. At this point it has found the optimal path since if there was a better path in an unexplored part of the maze (which has no walls as far as A\* is concerned) it would go towards the unexplored part of the maze, discover new walls, and have to re-plan. On the second run, it just goes to the goal as fast as possible using A\* since it has found the optmal path.
 
 ## IV. Results
-_(approx. 2-3 pages)_
 
 ### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
 
-| Controller | Run 1 moves | Run 2 moves | Score | Efficiency |
-| :--- | :---: | :---: | :---: | :---: |
-| RandomController | 1000 | 35 | 67.42 | 234 |
-| VisitCountController | 100 | 35 | 24.13 | 234 |
-| PureAStarController | 45 | 35 | 28.34 | 234 |
-| AStarReturnController | 65 | 35 | 25.97 | 234 |
+####RandomController
+since the random controller will traverse a different path every time, I ran the controller multiple times on each maze and found the median result because the median is a more robust measure of central tendency and there is no way to compute a mean with NA entries. Here are the results:
 
+#####Maze 1
+| Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | 654 | 32 | 53.800 | 0.422 |
+| 2 | 693 | 17 | 40.100 | 0.444 |
+| 3 | 690 | 23 | 46.000 | 0.438 |
+| 4 | 360 | 25 | 37.000 | 0.672 |
+| 5 | NA | NA | NA | NA |
+| 6 | 953 | 20 | 51.767 | 0.301 |
+| 7 | NA | NA | NA | NA |
+| 8 | 202 | 25 | 31.733 | 0.955 |
+| 9 | NA | NA | NA | NA |
+| 10 | 511 | 23 | 40.033 | 0.568 |
+| 11 | NA | NA | NA | NA |
+| 12 | 812 | 17 | 44.067 | 0.376 |
+| 13 | 157 | 32 | 37.233 | 1.115 |
+| 14 | 77 | 27 | 29.567 | 2.299 |
+| 15 | 432 | 22 | 36.400 | 0.613 |
+| Median | 511 | 23 | 40.033 | 0.568
+
+#####Maze 2
+| Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | 544 | 51 | 69.133 | 0.577 |
+| 2 | NA | NA | NA | NA |
+| 3 | NA | NA | NA | NA |
+| 4 | NA | NA | NA | NA |
+| 5 | 943 | 33 | 31.433 | 0.378 |
+| 6 | 919 | 28 | 58.633 | 0.362 |
+| 7 | 238 | 42 | 49.933 | 1.025 |
+| 8 | NA | NA | NA | NA |
+| 9 | NA | NA | NA | NA |
+| 10 | 87 | 61 | 63.900 | 2.621 |
+| 11 | 404 | 40 | 53.467 | 0.705 |
+| 12 | 409 | 36 | 49.633 | 0.841 |
+| 13 | 609 | 32 | 52.300 | 0.571 |
+| 14 | NA | NA | NA | NA |
+| 15 | 738 | 30 | 54.600 | 0.465 |
+| Median | 544 | 36 | 53.467 | 0.577 |
+
+#####Maze 3
+| Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | NA | NA | NA | NA |
+| 2 | 375 | 51 | 63.500 | 0.933 |
+| 3 | NA | NA | NA | NA |
+| 4 | 310 | 54 | 64.333 | 1.013 |
+| 5 | NA | NA | NA | NA |
+| 6 | NA | NA | NA | NA |
+| 7 | NA | NA | NA | NA |
+| 8 | 545 | 46 | 64.167 | 0.550 |
+| 9 | 876 | 37 | 66.200 | 0.540 |
+| 10 | 228 | 58 | 65.600 | 1.404 |
+| 11 | NA | NA | NA | NA |
+| 12 | NA | NA | NA | NA |
+| 13 | 699 | 43 | 66.300 | 0.595 |
+| 14 | 930 | 40 | 71.000 | .460 |
+| 15 | 481 | 39 | 55.033 | 0.798 |
+| Median | 513 | 44.5 | 64.9665 | 0.6965
+
+####VisitCountController
+| Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | 202 | 17 | 23.733 | 1.441 |
+| 2 | 226 | 24 | 31.533 | 1.726 |
+| 3 | 303 | 44 | 54.100 | 1.647 |
+
+####PureAStarController
+| Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+
+####PureAStarController
+| Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | 39 | 26 | 27.300 | 4.385 |
+| 2 | 70 | 43 | 45.333 | 3.543 |
+| 3 | 47 | 55 | 56.567 | 4.723 |
+
+####AStarReturnController
+| Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | 201 | 17 | 23.700 | 1.398 |
+| 2 | 198 | 22 | 28.600 | 1.924 |
+| 3 | 302 | 25 | 35.067 | 1.573 |
 
 ### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
 
+####Maze 1
+| Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| RandomController | 511 | 23 | 40.033 | 0.568 |
+| VisitCountController | 202 | 17 | 23.733 | 1.441 |
+| PureAStarController | 39 | 26 | 27.300 | 4.385 |
+| AStarReturnController | 201 | 17 | 23.700 | 1.398 |
+
+As can be seen in the results for maze 1, the random controller was the worst performer in terms of score as expected. The A\* return controller was the best, but was very close to the visit count controller. The pure A\* controller also worked well, but not as well as the VisitCount and AStarReturn controllers. One interesting thing to note is the efficiency number. The pure A\* controller was by far the best performer in terms of exploration efficiency. The reason for this is probably that it is less focused on exploration than the other controllers which is counter-intuitive at first. Since it is less focused on exploration, it has far fewer timesteps than the other three. Since efficiency is j / N1 (where j is number of known cell junctions (walls or non-walls) and N1 is the number of timesteps in the first run), decreasing N1 or increasing j will improve the efficiency score. The pure A\* controller has the lowest N1 by far which explains the impressive efficiency value.
+
+####Maze 2
+| Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| RandomController | 544 | 36 | 53.467 | 0.577 |
+| VisitCountController | 226 | 24 | 31.533 | 1.726 |
+| PureAStarController | 70 | 43 | 45.333 | 3.543 |
+| AStarReturnController | 198 | 22 | 28.600 | 1.924 |
+
+For maze 2, the controllers rank in the same order as before, but with the bigger maze the differences between them are more pronounced. The A\* return controller was again the best performer, but not by a wide margin. The pure A\* controller on the other hand did much worse with a larger maze and was cloer to the random controller than the other two. This is likely due to the lack of exploration. Since it explores very little of the maze in the first run, it ends up doing more exploration in the second run when it is 30 times more costly.
+
+####Maze 3
+| Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| RandomController | 513 | 44.5 | 64.9665 | 0.6965 |
+| VisitCountController | 303 | 44 | 54.100 | 1.647 |
+| PureAStarController | 47 | 55 | 56.567 | 4.723 |
+| AStarReturnController | 302 | 25 | 35.067 | 1.573 |
+
+Once again, with a larger maze, the differences were even more pronounced. The A\* return controller is now the clear winner while the visit count and pure A\* controllers are far behind. You may notice that it took approximately the same number of moves in the first runs for the visit count and A\* return controllers, the main difference in their score was run 2. This result really highlights the benefit of the A\* return controller over the visit count controller. _Instead of being a general exploration algorithm, it only explores the parts of the maze that A\* thinks could possibly be a shorter path._ On larger and larger mazes, this becomes more and more important since the shortest path will cover less and less of the maze.
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+One thing that was of note in this project was the trade-off between exploration and exploitation. The random controller is a good example of this since each time it covered different amounts of the maze. I plotted the number of moves in the first run vs the number of moves in the second run:
+
+![Exploration vs Exploitation](images/ExplorationExploitationRandom3.png )
+
+As you can see, they are somewhat negatively correlated. The more exploration you do, the the less exploitation you need since with more knowledge of the maze, you need less moves to get to the goal. On the other hand, if you explore less, you spend more time during the exploitation phase in run 2 looking for the goal.
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+
+To solve the mazes in this project, I began by looking up different existing ways to explore and solve mazes. Once I realized that A\* could be used to get the shortest path, it was more of a choice on how to explore the maze efficiently since if A\* has enough of the maze, it quickly finds the optimal path to the goal. The difficult part of the project was to determine how to efficiently explore a maze you know almost nothing about. I also wanted to improve on Shibuya's work, which was difficult since he already had a very efficient exploration algorithm. Like Shibuya, I had problems getting the A\* algorithm to work correctly, but once I wrote a few software tests I quickly found the problem. Visualizing what the A\* algorithm was doing was very important also since doing all the calculations by hand to check A\* can take a long time. I learned how to use the turtle library in python to visualize the maze and the shortest path within it.
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
 
------------
+While my A\* return algorithm was quite successful there are probably even better ways to explore the mazes in this scenario. One weakness of the A\* return algorithm is that is has to go from the start square to the goal without discovering any new walls. The robot doesn't actually need to traverse the final time from the start to the goal, instead a more complex stopping criterion could be implemented where it would check to see if it has discovered the optimal path without having to actually traverse it. This would basically require the robot to run simulations of itself before making each move.
 
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?

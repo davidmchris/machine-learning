@@ -14,6 +14,7 @@ class PureAStarController(RobotController):
         super(PureAStarController, self).__init__(maze_dim)
         self.planner = AStarPlanner(self.maze_map, GoalHeuristic(maze_dim))
         self.planner.replan(self.location, self.heading)
+        print "Using PureAStarController"
 
     def next_move(self, sensors):
         """

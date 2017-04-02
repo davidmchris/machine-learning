@@ -20,6 +20,7 @@ class AStarReturnController(RobotController):
         self.planner = AStarPlanner(self.maze_map, self.goal_heuristic)
         self.planner.replan(self.location, self.heading)
         self.replanned = False
+        print "Using AStarReturnController"
 
     def next_move(self, sensors):
         """
