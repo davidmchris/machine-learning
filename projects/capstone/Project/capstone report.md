@@ -6,13 +6,13 @@ April 1st, 2017
 ## I. Definition
 
 ### Project Overview
-Micromouse competitions have been around since the late 1970's. In the competition, a robot mouse solves a 16x16 maze. The mouse gets two runs, the first to explore the maze and the second to find it's way to the goal in the center of the maze. The mice are ranked based on how much time they use in the first and second runs.
+Micromouse competitions have been around since the late 1970's. In the competition, a robot mouse solves a 16x16 maze. The mouse gets two runs: the first to explore the maze and the second to find its way to the goal in the center of the maze. The mice are ranked based on how much time they use in the first and second runs.
 
 While the real micromouse competitions use physical robot mice, this project just simulates the maze and movement of the mouse in discrete timesteps. Each maze is a virtual grid. It is stored in a text file that defines where the walls are. The mazes range from 12x12 to 16x16.
 
 ### Problem Statement
 
-Like the real competitions, the mouse gets two runs, the first to explore the maze and the second to get to the center as fast as possible.
+Like the real competitions, the mouse gets two runs--the first to explore the maze and the second to get to the center as fast as possible.
 
 The purpose of the first run is to explore the maze. In Naoki Shibuya's capstone project he uses four types of exploration algorithms:
  - Random
@@ -318,5 +318,5 @@ To solve the mazes in this project, I began by looking up different existing way
 
 ### Improvement
 
-While my A\* return algorithm was quite successful there are probably even better ways to explore the mazes in this scenario. One weakness of the A\* return algorithm is that is has to go from the start square to the goal without discovering any new walls. The robot doesn't actually need to traverse the final time from the start to the goal, instead a more complex stopping criterion could be implemented where it would check to see if it has discovered the optimal path without having to actually traverse it. This would basically require the robot to run simulations of itself before making each move.
+While my A\* return algorithm was quite successful there are probably even better ways to explore the mazes in this scenario. One weakness of the A\* return algorithm is that is has to go from the start square to the goal without discovering any new walls. The robot doesn't actually need to traverse the final time from the start to the goal; instead a more complex stopping criterion could be implemented where it would check to see if it has discovered the optimal path without having to actually traverse it. This would basically require the robot to run simulations of itself before making each move.
 
