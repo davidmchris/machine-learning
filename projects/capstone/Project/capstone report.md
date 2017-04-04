@@ -37,6 +37,8 @@ These are the metrics I have defined for evaluating my algorithms:
  - N2: Number of moves in the second run
  - Mouse score: N2 + N1/30
  - Exploration Efficiency: j / N1 where j is number of known maze cell junctions (walls or not walls)
+ 
+N1 and N2 give me the ability to compare how well each algorithm explores or exploits its knowledge about the maze. This can give some indication on why the algorithm performs well or does not perform well. The score is the main metric for evaluating an algorithm. The algorithms must balance between exploration and exploitation to get a good score. The exploration efficiency is another way to determine why an algorithm works well. An algorithm that always explores new territory will have a higher efficiency score than an algorithm that repeatedly traverses the same path. If one of the algorithms has a low efficiency and a high number of moves in the first run, you know that it could be stuck in a loop, dead end, or just doesn't effectively explore.
 
 ## II. Analysis
 
