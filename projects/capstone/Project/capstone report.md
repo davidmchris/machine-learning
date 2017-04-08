@@ -332,6 +332,7 @@ The shortest path on this maze goes around the outside of the maze where the heu
 | 15 | NA | NA | NA | NA |
 | Median | 595.50 | 159 | 176.97 | 0.41 |
 
+##### All Controllers
 | Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
 | RandomController | 595.50 | 159 | 176.97 | 0.41 |
