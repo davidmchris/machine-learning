@@ -252,10 +252,6 @@ since the random controller will traverse a different path every time, I ran the
 #### PureAStarController
 
 | Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
-
-#### PureAStarController
-
-| Maze | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
 | --- | --- | --- | ---: | ---: |
 | 1 | 39 | 26 | 27.300 | 4.385 |
 | 2 | 70 | 43 | 45.333 | 3.543 |
