@@ -14,8 +14,8 @@ class Robot(object):
         '''
         # self.controller = RandomController(maze_dim)
         # self.controller = PureAStarController(maze_dim)
-        self.controller = VisitCountController(maze_dim)
-        # self.controller = AStarReturnController(maze_dim)
+        # self.controller = VisitCountController(maze_dim)
+        self.controller = AStarReturnController(maze_dim)
 
     def next_move(self, sensors):
         '''

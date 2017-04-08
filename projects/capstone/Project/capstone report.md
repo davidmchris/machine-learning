@@ -304,6 +304,43 @@ For maze 2, the controllers rank in the same order as before, but with the bigge
 
 Once again, with a larger maze, the differences were even more pronounced. The A\* return controller is now the clear winner while the visit count and pure A\* controllers are far behind. You may notice that it took approximately the same number of moves in the first runs for the visit count and A\* return controllers, the main difference in their score was run 2. This result really highlights the benefit of the A\* return controller over the visit count controller. _Instead of being a general exploration algorithm, it only explores the parts of the maze that A\* thinks could possibly be a shorter path._ On larger and larger mazes, this becomes more and more important since the shortest path will cover less and less of the maze.
 
+#### Hard Maze
+
+The AStarReturn algorithm is not the best in all cases though. I came up with a maze that shows one way to trick it into exploring a really large section of the maze when the real shortest path is very simple. Here is the maze with the shortest path marked:
+
+![Maze 5](images/maze_5_shortest_path.png)
+
+The shortest path on this maze goes around the outside of the maze where the heuristic values are higher. This is the achilles heel of the AStarReturnAlgorithm. After running the different algorithms on this maze, here is the result:
+
+##### Random Controller
+| Iteration | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| 1 | 659 | 155 | 176.97 | 0.40 |
+| 2 | 418 | 176 | 189.93 | 0.53 |
+| 3 | NA | NA | NA | NA |
+| 4 | NA | NA | NA | NA |
+| 5 | NA | NA | NA | NA |
+| 6 | 706 | 161 | 184.53 | 0.3 |
+| 7 | NA | NA | NA | NA |
+| 8 | NA | NA | NA | NA |
+| 9 | 532 | 157 | 174.73 | 0.42 |
+| 10 | 925 | NA | NA | 0.27 |
+| 11 | NA | NA | NA | NA |
+| 12 | NA | NA | NA | NA |
+| 13 | 254 | 159 | 167.47 | 0.89 |
+| 14 | NA | NA | NA | NA |
+| 15 | NA | NA | NA | NA |
+| Median | 595.50 | 159 | 176.97 | 0.41 |
+
+| Controller | Run 1 moves | Run 2 moves | Score | Exploration Efficiency |
+| --- | --- | --- | ---: | ---: |
+| RandomController | 595.50 | 159 | 176.97 | 0.41 |
+| VisitCountController | NA | NA | NA | NA |
+| PureAStarController | 214 | 21 | 28.13 | 1.80 |
+| AStarReturnController | 420 | 21 | 35.00 | 1.23 |
+
+As you can see from these results, this is a hard maze to solve for any of these algorithms. The best algorithm for this maze would be a wall follower since the outside wall would guide it directly to the maze goal along the shortest path (as long as it was following the left wall and not the right at the beginning). The random controller performed worse than the other mazes only completing it 6 out of 15 times. The maze was designed to be expensive to move through in the main part of the maze but easy to move through along the shortest path which would explain why all of the controllers did worse. The visit count controller was unable to complete the maze in 1000 timesteps. This maze was specifically designed to make the A\* return controller do badly. The way it works is that there are two paths in the maze, one really long one that takes up the bulk of the maze and the shortest path which goes around the edge. The heuristic in both A\* controllers will push them away from the corners and toward the middle which is the longer path. The reason the pure A\* controller does so much better than the A\* return controller is that it doesn't have to go back toward the start. The A\* return controller has to go back to the start and return to the goal at least once. In this case, it has to do it multiple times since it will find new walls when returning to the goal the second time.
+
 ## V. Conclusion
 
 ### Free-Form Visualization
